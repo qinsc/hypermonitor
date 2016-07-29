@@ -8,7 +8,7 @@
  * Created on 2016年7月20日 下午2:45:44
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.rest;
+package hyper.momitor.rest;
 
 import java.util.List;
 

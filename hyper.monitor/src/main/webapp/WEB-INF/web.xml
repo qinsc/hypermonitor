@@ -9,9 +9,9 @@
 	<context-param>
 		<param-name>resteasy.resources</param-name>
 		<param-value>
-			com.keiq.hyper.momitor.controller.FileApiImpl,
-			com.keiq.hyper.momitor.controller.HelloWorld,
-			com.keiq.hyper.momitor.controller.UserController,
+			hyper.momitor.controller.FileApiImpl,
+			hyper.momitor.controller.HelloWorld,
+			hyper.momitor.controller.UserController,
 		</param-value>
 	</context-param>
 	<context-param>
@@ -55,7 +55,7 @@
 	<!-- login filter -->
 	<filter>
 		<filter-name>UserLogin</filter-name>
-		 <filter-class>com.keiq.hyper.momitor.filter.LoginFilter</filter-class>
+		 <filter-class>hyper.momitor.filter.LoginFilter</filter-class>
 		<init-param>
 			<param-name>excludedPages</param-name>
 			<param-value>

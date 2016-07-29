@@ -8,7 +8,7 @@
  * Created on 2016年7月28日 下午7:43:22
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.filter;
+package hyper.momitor.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.keiq.hyper.momitor.util.DataContextManager;
+import hyper.momitor.util.DataContextManager;
 
 /**
  * TODO 此处填写 class 信息

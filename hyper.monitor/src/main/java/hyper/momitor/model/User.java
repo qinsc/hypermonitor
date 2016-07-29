@@ -8,7 +8,7 @@
  * Created on 2016年7月28日 下午8:38:16
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.model;
+package hyper.momitor.model;
 
 /**
  * TODO 此处填写 class 信息

@@ -8,7 +8,7 @@
  * Created on 2016年7月28日 下午3:37:00
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.util;
+package hyper.momitor.util;
 
 import java.util.Arrays;
 import java.util.Comparator;

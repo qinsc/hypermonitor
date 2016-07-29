@@ -14,5 +14,5 @@
 	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 	<context:component-scan base-package="test.rest.*" />
 	<context:annotation-config />
-	 <bean id="springUtil" class="com.keiq.hyper.momitor.util.SpringUtil" />
+	 <bean id="springUtil" class="hyper.momitor.util.SpringUtil" />
 </beans>  

@@ -8,7 +8,7 @@
  * Created on 2016年7月28日 下午8:29:52
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.controller;
+package hyper.momitor.controller;
 
 import java.io.IOException;
 
@@ -19,8 +19,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 
-import com.keiq.hyper.momitor.filter.LoginFilter;
-import com.keiq.hyper.momitor.model.User;
+import hyper.momitor.filter.LoginFilter;
+import hyper.momitor.model.User;
 
 /**
  * TODO 此处填写 class 信息

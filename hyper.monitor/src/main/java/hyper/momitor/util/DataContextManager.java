@@ -8,7 +8,7 @@
  * Created on 2016年7月28日 下午8:17:26
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.util;
+package hyper.momitor.util;
 
 import javax.servlet.http.HttpSession;
 

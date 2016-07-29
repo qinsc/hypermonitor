@@ -9,7 +9,7 @@
  *******************************************************************************/
 
 
-package com.keiq.hyper.momitor.service;
+package hyper.momitor.service;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@
  * Created on 2016年7月20日 下午4:03:36
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.controller;
+package hyper.momitor.controller;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;

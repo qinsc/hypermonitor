@@ -8,7 +8,7 @@
  * Created on 2016年7月20日 下午2:57:58
  *******************************************************************************/
 
-package com.keiq.hyper.momitor.controller;
+package hyper.momitor.controller;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -22,9 +22,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.keiq.hyper.momitor.rest.FileApi;
-import com.keiq.hyper.momitor.service.IFile;
-import com.keiq.hyper.momitor.util.SpringUtil;
+import hyper.momitor.rest.FileApi;
+import hyper.momitor.service.IFile;
+import hyper.momitor.util.SpringUtil;
 
 /**
  * TODO 此处填写 class 信息
