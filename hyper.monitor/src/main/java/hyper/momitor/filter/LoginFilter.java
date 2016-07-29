@@ -33,7 +33,7 @@ import hyper.momitor.util.DataContextManager;
  */
 
 public class LoginFilter implements Filter {
-	public static final String SESSION_USER = "administrator"; //$NON-NLS-1$
+	public static final String SESSION_USER = "admin"; //$NON-NLS-1$
 	public static final String SESSION_LANGUAGE = "language"; //$NON-NLS-1$
 
 	private String excludedPages;

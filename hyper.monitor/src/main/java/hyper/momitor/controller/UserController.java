@@ -31,9 +31,9 @@ import hyper.momitor.model.User;
 public class UserController {
 	@Path("/login")
 	@POST
-//	@Consumes(MediaType.APPLICATION_JSON)
 	public void login(@FormParam("username") String userName, @FormParam("password") String password, @Context HttpServletRequest request,
 			@Context HttpServletResponse response) {
+		System.out.println("Do login ...");
 		String homePage = "/views/index.jsp";
 		String loginPage = "/login.jsp";
 		// if already login
@@ -44,21 +44,22 @@ public class UserController {
 		User user = new User();
 		user.setUserName("admin");
 		user.setPassword("keqi");
-		String code = "0"; //$NON-NLS-1$
+//		String code = "0"; //$NON-NLS-1$
 		boolean yes = false;
-		if (null == user) {
-			code = "1"; // not exists //$NON-NLS-1$
-		} else {
+//		if (null == user) {
+//			code = "1"; // not exists //$NON-NLS-1$
+//		} else {
 			if (null != password && password.equals(user.getPassword())) {
 				// Login success and go index
 				request.getSession().setAttribute(LoginFilter.SESSION_USER, user);
 				yes = true;
 				redirectPage(request, response, request.getContextPath() + homePage);
 				return;
-			} else {
-				code = "2"; // error password //$NON-NLS-1$
-			}
-		}
+			} 
+//			else {
+//				code = "2"; // error password //$NON-NLS-1$
+//			}
+//		}
 		if (!yes) {
 			redirectPage(request, response, request.getContextPath() + loginPage + "?username=" + user.getUserName() + "#");
 		}
