@@ -60,8 +60,7 @@
 			<param-name>excludedPages</param-name>
 			<param-value>
 			/login.jsp,
-			/resources/*,
-			/js/*,
+			/assets/*,
 			/rest/users/login
 			</param-value>
 		</init-param>
@@ -74,4 +73,8 @@
 			<param-value>/login.jsp</param-value>
 		</init-param>
 	</filter>
+	<filter-mapping>
+		<filter-name>UserLogin</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>

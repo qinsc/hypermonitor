@@ -17,14 +17,12 @@ import javax.servlet.http.HttpSession;
 import hyper.momitor.util.DataContextManager;
 
 /**
- * 用户登陆拦截器
  *
  * @author qinsc (mailto:qinscx@gmail.com)	m
  */
 
 public class LoginFilter implements Filter {
 	public static final String SESSION_USER = "SESSION_USER"; 
-	public static final String SESSION_LANGUAGE = "language"; //$NON-NLS-1$
 
 	private String excludedPages;
 	private String homePage;

@@ -15,11 +15,11 @@
 	<link rel="stylesheet" type="text/css" href="assets/css/signin.css" />
 	<%@include file="views/common/common.jsp"%>
 </head>
-<body>
-	<div class="container">
+<body style="background-image: url(<%=contextPath%>/assets/img/login_bkg.jpg); background-size:cover; background-repeat: no-repeat;">
+	<div class="container" >
+		<p class="form-signin-heading">Hyper Monitor</p>
 		<form class="form-signin" method="post" id="loginForm"
 			action="<%=contextPath%>/rest/users/login">
-			<h2 class="form-signin-heading">Hyper Monitor</h2>
 			<label for="username" class="sr-only">用户名</label>
 			<input type="text" id="username" name="username" class="form-control" placeholder="用户名" required autofocus>
 			<label for="password" class="sr-only">密 码</label>
@@ -41,6 +41,27 @@
 				return;
 			}
 			document.getElementById("loginForm").submit();
+		}
+		
+		//
+		// ENTER key press event process
+		//
+		if (document.addEventListener) { // Firefox
+			document.addEventListener("keypress", fireFoxHandler, true);
+		} else {
+			document.attachEvent("onkeypress", ieHandler);
+		}
+
+		function fireFoxHandler(event) {
+			if (event.keyCode == 13) {
+				login();
+			}
+		}
+
+		function ieHandler(event) {
+			if (event.keyCode == 13) {
+				login();
+			}
 		}
 	</script>
 </body>
