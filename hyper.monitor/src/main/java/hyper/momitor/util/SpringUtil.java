@@ -1,13 +1,3 @@
-/*******************************************************************************
- *
- *==============================================================================
- *
- * Copyright (c) 2001-2016 Primeton Technologies, Ltd.
- * All rights reserved.
- * 
- * Created on 2016年7月28日 下午3:37:00
- *******************************************************************************/
-
 package hyper.momitor.util;
 
 import java.util.Arrays;
@@ -19,12 +9,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- *
- * @author qinsc (mailto:qinsc@primeton.com)
+ * spring的工具类，用来获取对应的bean实例
+ * @author qinsc (mailto:qinscx@gmail.com)
  */
 
 public class SpringUtil implements ApplicationContextAware {
-
 	private static ApplicationContext applicationContext = null;
 
 	/**

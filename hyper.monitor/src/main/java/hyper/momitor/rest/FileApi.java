@@ -1,13 +1,3 @@
-/*******************************************************************************
- *
- *==============================================================================
- *
- * Copyright (c) 2001-2016 Primeton Technologies, Ltd.
- * All rights reserved.
- * 
- * Created on 2016年7月20日 下午2:45:44
- *******************************************************************************/
-
 package hyper.momitor.rest;
 
 import java.util.List;
@@ -24,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * TODO 此处填写 class 信息
+ * 文件测试接口
  *
  * @author qinsc (mailto:qinsc@primeton.com)
  */

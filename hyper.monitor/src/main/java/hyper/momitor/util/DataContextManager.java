@@ -1,21 +1,11 @@
-/*******************************************************************************
- *
- *==============================================================================
- *
- * Copyright (c) 2001-2016 Primeton Technologies, Ltd.
- * All rights reserved.
- * 
- * Created on 2016年7月28日 下午8:17:26
- *******************************************************************************/
-
 package hyper.momitor.util;
 
 import javax.servlet.http.HttpSession;
 
 /**
- * TODO 此处填写 class 信息
+ * 依附在线程上的session存储器
  *
- * @author qinsc (mailto:qinsc@primeton.com)
+ * @author qinsc (mailto:qinscx@gmail.com)
  */
 
 public class DataContextManager {

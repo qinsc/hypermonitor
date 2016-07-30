@@ -1,13 +1,3 @@
-/*******************************************************************************
- *
- *==============================================================================
- *
- * Copyright (c) 2001-2016 Primeton Technologies, Ltd.
- * All rights reserved.
- * 
- * Created on 2016年7月20日 下午4:03:36
- *******************************************************************************/
-
 package hyper.momitor.controller;
 
 import java.io.FileNotFoundException;
@@ -17,6 +7,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+/**
+ * 
+ * 测试rest接口
+ *
+ * @author qinsc (mailto:qinscx@gmail.com)
+ */
 @Path("/hello")
 public class HelloWorld {
 	@GET

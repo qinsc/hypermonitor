@@ -1,13 +1,3 @@
-/*******************************************************************************
- *
- *==============================================================================
- *
- * Copyright (c) 2001-2016 Primeton Technologies, Ltd.
- * All rights reserved.
- * 
- * Created on 2016年7月20日 下午2:57:58
- *******************************************************************************/
-
 package hyper.momitor.controller;
 
 import java.nio.file.Paths;
@@ -27,9 +17,8 @@ import hyper.momitor.service.IFile;
 import hyper.momitor.util.SpringUtil;
 
 /**
- * TODO 此处填写 class 信息
- *
- * @author qinsc (mailto:qinsc@primeton.com)
+ * 测试文件上传
+ * @author qinsc (mailto:qinscx@gmail.com)
  */
 public class FileApiImpl implements FileApi {
 	private IFile ifile = null; 

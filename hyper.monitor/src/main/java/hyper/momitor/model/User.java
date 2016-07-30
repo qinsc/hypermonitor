@@ -1,19 +1,9 @@
-/*******************************************************************************
- *
- *==============================================================================
- *
- * Copyright (c) 2001-2016 Primeton Technologies, Ltd.
- * All rights reserved.
- * 
- * Created on 2016年7月28日 下午8:38:16
- *******************************************************************************/
-
 package hyper.momitor.model;
 
 /**
- * TODO 此处填写 class 信息
+ * 用户
  *
- * @author qinsc (mailto:qinsc@primeton.com)
+ * @author qinsc (mailto:qinscx@gmail.com)
  */
 
 public class User {

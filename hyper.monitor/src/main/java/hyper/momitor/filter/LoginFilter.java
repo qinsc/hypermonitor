@@ -1,13 +1,3 @@
-/*******************************************************************************
- *
- *==============================================================================
- *
- * Copyright (c) 2001-2016 Primeton Technologies, Ltd.
- * All rights reserved.
- * 
- * Created on 2016年7月28日 下午7:43:22
- *******************************************************************************/
-
 package hyper.momitor.filter;
 
 import java.io.IOException;
@@ -27,13 +17,13 @@ import javax.servlet.http.HttpSession;
 import hyper.momitor.util.DataContextManager;
 
 /**
- * TODO 此处填写 class 信息
+ * 用户登陆拦截器
  *
- * @author qinsc (mailto:qinsc@primeton.com)
+ * @author qinsc (mailto:qinscx@gmail.com)	m
  */
 
 public class LoginFilter implements Filter {
-	public static final String SESSION_USER = "admin"; //$NON-NLS-1$
+	public static final String SESSION_USER = "SESSION_USER"; 
 	public static final String SESSION_LANGUAGE = "language"; //$NON-NLS-1$
 
 	private String excludedPages;
