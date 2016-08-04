@@ -6,8 +6,8 @@
 			<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
 			<span class="icon-bar"></span> <span class="icon-bar"></span>
 		</button>
-		<div id="navbar" herf="#">
-			<div class="navbar-brand" ><i class="fa"></i> <strong>Hyper Monitor </strong></div>
+		<div class="navbar-brand"  id="navbar"  href="#" style="cursor:hand">
+			<div><i class="fa"></i> <strong>Hyper Monitor </strong></div>
 		</div>
 	</div>
 

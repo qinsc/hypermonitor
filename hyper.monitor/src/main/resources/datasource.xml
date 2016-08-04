@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd 
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+        
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">  
+ 
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+     	<property name="url" value="jdbc:mysql://localhost:3306/hypermonitor?characterEncoding=UTF-8&amp;useSSL=false"></property>
+    	<property name="username" value="root"></property>  
+    	<property name="password" value="root"></property>
+    	
+    	<!-- 连接池启动时的初始值 -->  
+    	<property name="initialSize" value="5" />  
+    	<!-- 连接池的最大值 -->  
+    	<property name="maxActive" value="50" />  
+    	<!-- 最大空闲值.当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，一直减少到maxIdle为止  -->  
+    	<property name="maxIdle" value="10" />  
+    	<!-- 最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去一些连接，以免洪峰来时来不及申请 -->  
+    	<property name="minIdle" value="5" />
+    	<!-- 对闪断等异常现象，可使用自动重连能力，后续根据具体场景补充 -->
+	</bean>  
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis_config.xml" />
+		<!-- <property name="plugins" ref="paginationInterceptor"/>   -->
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="hyper.momitor" />
+		<property name="markerInterface" value="hyper.momitor.dao.MarkerInterface"/>
+	</bean>
+	
+	<bean id="transactionManager"    
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">    
+        <property name="dataSource" ref="dataSource" />    
+    </bean> 
+	
+	<aop:aspectj-autoproxy expose-proxy="true"/>
+	
+	<!-- spring声明式事务的配置，以下为spring的AOP事务管理的增强部分 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	    <tx:attributes>
+	    <!-- 需要由交给spring的aop来进行代理的方法的集合，如果应用有自己的方法需有由spring来进行事务控制必须添加方法-->
+	    	<tx:method name="new*" propagation="REQUIRED" />
+	        <tx:method name="save*" propagation="REQUIRED" />
+	        <tx:method name="add*" propagation="REQUIRED" />
+	        <tx:method name="create*" propagation="REQUIRED" />
+	        <tx:method name="insert*" propagation="REQUIRED" />
+	        <tx:method name="ins*" propagation="REQUIRED" />
+	        <tx:method name="update*" propagation="REQUIRED" />
+	        <tx:method name="upd*" propagation="REQUIRED" />
+	        <tx:method name="merge*" propagation="REQUIRED" />
+	        <tx:method name="delete*" propagation="REQUIRED" />
+	        <tx:method name="del*" propagation="REQUIRED" />
+	        <tx:method name="remove*" propagation="REQUIRED" />
+	        <tx:method name="put*" propagation="REQUIRED" />
+	        <tx:method name="use*" propagation="REQUIRED"/>
+	        <tx:method name="restart*" propagation="REQUIRED"/>
+	        <tx:method name="validate*" propagation="REQUIRED"/>
+	        <tx:method name="get*" propagation="REQUIRED" read-only="true" />
+	        <tx:method name="count*" propagation="REQUIRED" read-only="true" />
+	        <tx:method name="find*" propagation="REQUIRED" read-only="true" />
+	        <tx:method name="list*" propagation="REQUIRED" read-only="true" />
+	        <tx:method name="query*" propagation="REQUIRED" read-only="true" />
+	        <tx:method name="*" read-only="true" />
+	    </tx:attributes>
+	</tx:advice>
+    <!--Spring采用AOP进行事务控制,这里指定了业务逻辑层所有类的方法需要按txAdvice中配置的策略进行事务控制 -->	
+	<aop:config expose-proxy="true">
+		<aop:pointcut id="txPointcut" expression="execution(* hyper.momitor.service..*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	</aop:config>
+</beans>

@@ -1,12 +1,16 @@
 package hyper.momitor.model;
 
+import java.io.Serializable;
+
 /**
  * 用户
  *
  * @author qinsc (mailto:qinscx@gmail.com)
  */
 
-public class User {
+public class User implements Serializable{
+	private static final long serialVersionUID = -41637819376528794L;
+	 
 	private String userName;
 	private String password;
 

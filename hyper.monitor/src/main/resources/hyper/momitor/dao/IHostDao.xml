@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hyper.momitor.dao.IHostDao">
+	<resultMap id="HostMap" type="hyper.momitor.model.Host">
+		<id     property="hostId"              column="HOST_Id"                      jdbcType="VARCHAR"/>
+		<result property="hostName"            column="HOST_NAME"                    jdbcType="VARCHAR"/>
+		<result property="bootTime"            column="BOOT_TIME"                    jdbcType="TIMESTAMP"/>
+		<result property="upTime"              column="UP_TIME"                      jdbcType="BIGINT"/>
+		<result property="os"                  column="OS"                           jdbcType="VARCHAR"/>
+		<result property="osPlatform"          column="OS_PLATFORM"                  jdbcType="VARCHAR"/>
+		<result property="osPlatformFamily"    column="PLATFORM_FAMILY"              jdbcType="VARCHAR"/>
+		<result property="osPlatformVersion"   column="OS_PLATFORM_VERSION"          jdbcType="VARCHAR"/>
+		<result property="cpuCores"            column="CPU_CORES"                    jdbcType="INTEGER"/>
+		<result property="cpuThreads"          column="CPU_THREADS"                  jdbcType="INTEGER"/>
+		<result property="cpuModelName"        column="CPU_MODEL_NAME"               jdbcType="VARCHAR"/>
+		<result property="cpuMhz"              column="CPU_MHZ"                      jdbcType="INTEGER"/>
+		<result property="memSize"             column="MEM_SIZE"    				 jdbcType="INTEGER"/>
+		<result property="groupId"             column="GROUP_ID"          			 jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="add" parameterType="hyper.momitor.model.Host">
+		insert into HM_HOST
+		(
+		HOST_ID
+		, HOST_NAME
+		, BOOT_TIME
+		, UP_TIME
+		, OS
+		, OS_PLATFORM
+		, PLATFORM_FAMILY
+		, OS_PLATFORM_VERSION
+		, CPU_CORES
+		, CPU_THREADS
+		, CPU_MODEL_NAME
+		, CPU_MHZ
+		, MEM_SIZE
+		, GROUP_ID
+		)
+		values
+		(
+		#{hostId, 			         jdbcType=VARCHAR}
+		,#{hostName,          	     jdbcType=VARCHAR}
+		,#{bootTime,          	     jdbcType=TIMESTAMP}
+		,#{upTime,            	     jdbcType=BIGINT}
+		,#{os,                	     jdbcType=VARCHAR}
+		,#{osPlatform,        	     jdbcType=VARCHAR}
+		,#{osPlatformFamily,         jdbcType=VARCHAR}
+		,#{osPlatformVersion,        jdbcType=VARCHAR}
+		,#{cpuCores,                 jdbcType=INTEGER}
+		,#{cpuThreads,               jdbcType=INTEGER}
+		,#{cpuModelName,             jdbcType=VARCHAR}
+		,#{cpuMhz,                   jdbcType=INTEGER}
+		,#{memSize,                  jdbcType=INTEGER}
+		,#{groupId,                  jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="hyper.momitor.model.Host">
+		update HM_HOST set
+		HOST_NAME             	= #{hostName,         	    jdbcType=VARCHAR},
+		BOOT_TIME             	= #{bootTime,         	    jdbcType=TIMESTAMP},
+		UP_TIME                 = #{upTime,           	    jdbcType=BIGINT},
+		OS                      = #{os,               	    jdbcType=VARCHAR},
+		OS_PLATFORM           	= #{osPlatform,       	    jdbcType=VARCHAR},
+		PLATFORM_FAMILY         = #{osPlatformFamily,        jdbcType=VARCHAR},
+		OS_PLATFORM_VERSION     = #{osPlatformVersion,       jdbcType=VARCHAR},
+		CPU_CORES               = #{cpuCores,                jdbcType=INTEGER},
+		CPU_THREADS             = #{cpuThreads,              jdbcType=INTEGER},
+		CPU_MODEL_NAME          = #{cpuModelName,            jdbcType=VARCHAR},
+		CPU_MHZ                 = #{cpuMhz,                  jdbcType=INTEGER},
+		MEM_SIZE     		    = #{memSize,                 jdbcType=INTEGER},
+		GROUP_ID                = #{groupId,                 jdbcType=VARCHAR}
+		where
+		HOST_ID       			= #{hostId,						jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		delete from HM_HOST where HOST_ID = #{hostId, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryAll" resultMap="HostMap">
+		select * from HM_HOST order by HOST_NAME desc
+	</select>
+
+	<select id="queryOne" resultMap="HostMap" parameterType="java.lang.String">
+		select * from HM_HOST where HOST_ID = #{hostId, jdbcType=VARCHAR}
+	</select>
+
+</mapper>

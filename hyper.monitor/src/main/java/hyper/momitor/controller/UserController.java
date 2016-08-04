@@ -67,7 +67,6 @@ public class UserController {
 		
 		String url = request.getContextPath() + "/login.jsp";
 		redirectPage(request, response, url);
-		return;
 	}
 
 	/**
