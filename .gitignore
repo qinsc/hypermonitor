@@ -1,7 +1,8 @@
-/target
-/.settings
-/.idea
-/doc
+hyper.monitor.iml
 .project
 .classpath
-hyper.monitor.iml
+target/*
+.settings/*
+.idea/*
+doc/*
+

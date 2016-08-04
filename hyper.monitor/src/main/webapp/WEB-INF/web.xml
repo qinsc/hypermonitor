@@ -9,8 +9,6 @@
 	<context-param>
 		<param-name>resteasy.resources</param-name>
 		<param-value>
-			hyper.momitor.controller.FileApiImpl,
-			hyper.momitor.controller.HelloWorld,
 			hyper.momitor.controller.UserController,
 		</param-value>
 	</context-param>
@@ -39,7 +37,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			classpath:applicationContext.xml,
-			classpath:applicationContext.xml
+			classpath:datasource.xml
 		</param-value>
 	</context-param>
 	<listener>
