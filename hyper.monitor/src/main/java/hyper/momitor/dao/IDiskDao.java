@@ -4,7 +4,7 @@ import java.util.List;
 
 import hyper.momitor.model.Disk;
 
-public interface IDiskDao { // extends MarkerInterface{
+public interface IDiskDao extends MarkerInterface{
 	List<Disk> queryAll();
 	Disk queryOne(String id);
 	void add(Disk host);

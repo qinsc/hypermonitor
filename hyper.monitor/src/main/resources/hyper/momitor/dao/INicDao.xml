@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hyper.momitor.dao.INicDao">
+	<resultMap id="NicMap" type="hyper.momitor.model.Nic">
+		<id     property="nicId"              column="NIC_ID"                      	jdbcType="VARCHAR"/>
+		<result property="nicName"            column="NIC_NAME"                     jdbcType="VARCHAR"/>
+		<result property="mac"          	  column="MAC"                         	jdbcType="VARCHAR"/>
+		<result property="ip"    		      column="IP"              		 		jdbcType="VARCHAR"/>
+		<result property="hostId"   		  column="HOST_ID"          			jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="add" parameterType="hyper.momitor.model.Nic">
+		insert into HM_NIC
+		(
+		  NIC_ID
+		, NIC_NAME
+		, MAC
+		, IP
+		, HOST_ID
+		)
+		values
+		(
+		 #{nicId, 		jdbcType=VARCHAR}
+		,#{nicName,     jdbcType=VARCHAR}
+		,#{mac,         jdbcType=VARCHAR}
+		,#{ip,          jdbcType=VARCHAR}
+		,#{hostId,      jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="hyper.momitor.model.Nic">
+		update HM_NIC set
+			NIC_NAME             		= #{nicName,         	   	 jdbcType=VARCHAR},
+			MAC          				= #{mac,            		 jdbcType=VARCHAR},
+			IP                 	 		= #{ip,                  	 jdbcType=VARCHAR},
+			HOST_ID                 	= #{hostId,                  jdbcType=VARCHAR}
+		where
+			NIC_ID       				= #{nicId,					 jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		delete from HM_NIC where NIC_ID = #{nicId, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryAll" resultMap="NicMap">
+		select * from HM_NIC order by NIC_NAME desc
+	</select>
+
+	<select id="queryOne" resultMap="NicMap" parameterType="java.lang.String">
+		select * from HM_NIC where NIC_ID = #{nicId, jdbcType=VARCHAR}
+	</select>
+
+</mapper>

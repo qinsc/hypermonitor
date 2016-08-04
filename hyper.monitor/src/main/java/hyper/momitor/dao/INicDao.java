@@ -11,7 +11,7 @@ import hyper.momitor.model.Nic;
  * @author qinscx
  *
  */
-public interface INicDao { //} extends MarkerInterface{
+public interface INicDao extends MarkerInterface{
 	List<Nic> queryAll();
 	Nic queryOne(String id);
 	void add(Nic host);
