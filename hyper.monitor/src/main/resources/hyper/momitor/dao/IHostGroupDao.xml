@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hyper.momitor.dao.IHostGroupDao">
+	<resultMap id="HostGroupMap" type="hyper.momitor.model.HostGroup">
+		<id     property="groupId"            column="GROUP_ID"                       jdbcType="VARCHAR"/>
+		<result property="groupName"          column="GROUP_NAME"                     jdbcType="VARCHAR"/>
+		<result property="groupDesc"   		  column="GROUP_DESC"          			  jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="add" parameterType="hyper.momitor.model.HostGroup">
+		insert into HM_HOST_GROUP
+		(
+		  GROUP_ID
+		, GROUP_NAME
+		, GROUP_DESC
+		)
+		values
+		(
+		 #{groupId, 		  jdbcType=VARCHAR}
+		,#{groupName,     	  jdbcType=VARCHAR}
+		,#{groupDesc,         jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="hyper.momitor.model.HostGroup">
+		update HM_HOST_GROUP set
+			GROUP_NAME             		= #{groupName,         	   	 jdbcType=VARCHAR},
+			GROUP_DESC          		= #{groupDesc,               jdbcType=VARCHAR}
+		where
+			GROUP_ID       				= #{groupId,				 jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		delete from HM_HOST_GROUP where GROUP_ID = #{groupId, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryAll" resultMap="HostGroupMap">
+		select * from HM_HOST_GROUP order by GROUP_NAME desc
+	</select>
+
+	<select id="queryOne" resultMap="HostGroupMap" parameterType="java.lang.String">
+		select * from HM_HOST_GROUP where GROUP_ID = #{groupId, jdbcType=VARCHAR}
+	</select>
+
+</mapper>

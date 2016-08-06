@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hyper.momitor.dao.ITagDao">
+	<resultMap id="TagMap" type="hyper.momitor.model.Tag">
+		<id     property="tagId"            column="TAG_ID"                       jdbcType="VARCHAR"/>
+		<result property="tagKey"           column="TAG_KEY"                      jdbcType="VARCHAR"/>
+		<result property="tagDesc"   		column="TAG_DESC"          			  jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="add" parameterType="hyper.momitor.model.Tag">
+		insert into HM_TAG
+		(
+		  TAG_ID
+		, TAG_KEY
+		, TAG_DESC
+		)
+		values
+		(
+		 #{tagId, 		  jdbcType=VARCHAR}
+		,#{tagKey,     	  jdbcType=VARCHAR}
+		,#{tagDesc,       jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="hyper.momitor.model.Tag">
+		update HM_TAG set
+			TAG_KEY             		= #{tagKey,         	   jdbcType=VARCHAR},
+			TAG_DESC          		    = #{tagDesc,               jdbcType=VARCHAR}
+		where
+			TAG_ID       				= #{tagId,				   jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		delete from HM_TAG where TAG_ID = #{tagId, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryAll" resultMap="TagMap">
+		select * from HM_TAG order by TAG_KEY desc
+	</select>
+
+	<select id="queryOne" resultMap="TagMap" parameterType="java.lang.String">
+		select * from HM_TAG where TAG_ID = #{tagId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryAllTagValues" resultType="hyper.momitor.model.Tag">
+		select 
+			T.TAG_ID as tagId,
+			T.TAG_KEY as tagKey,
+			T.TAG_DESC as tagDesc,
+			R.TAG_VALUE as tagValue,
+			R.RELATION_ID as relationId,
+			R.OWNER_ID as ownerId
+		from 
+			HM_TAG as T, 
+			HM_TAG_RELATION as R 
+		where 
+			T.TAG_ID = R.TAG_ID
+		order by TAG_KEY desc
+	</select>
+
+	<select id="queryOneTagValue" resultType="hyper.momitor.model.Tag" parameterType="java.lang.String">
+		select 
+			T.TAG_ID as tagId,
+			T.TAG_KEY as tagKey,
+			T.TAG_DESC as tagDesc,
+			R.TAG_VALUE as tagValue,
+			R.RELATION_ID as relationId,
+			R.OWNER_ID as ownerId
+		from HM_TAG as T, HM_TAG_RELATION as R 
+		where T.TAG_ID = R.TAG_ID and R.TAG_ID = #{tagId, jdbcType=VARCHAR} and R.OWNER_ID = #{ownerId, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addTagValue" parameterType="hyper.momitor.model.Tag">
+		insert into HM_TAG_RELATION
+		(
+		  RELATION_ID
+		, TAG_ID
+		, TAG_VALUE
+		, OWNER_ID
+		)
+		values
+		(
+		 #{relationId, 		  jdbcType=VARCHAR}
+		,#{tagId,     	      jdbcType=VARCHAR}
+		,#{tagValue,          jdbcType=VARCHAR}
+		,#{ownerId,           jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteTagValue" parameterType="java.lang.String">
+		delete from HM_TAG_RELATION where TAG_ID = #{tagId, jdbcType=VARCHAR} and OWNER_ID = #{ownerId, jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

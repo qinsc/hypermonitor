@@ -4,8 +4,6 @@
 	<resultMap id="HostMap" type="hyper.momitor.model.Host">
 		<id     property="hostId"              column="HOST_Id"                      jdbcType="VARCHAR"/>
 		<result property="hostName"            column="HOST_NAME"                    jdbcType="VARCHAR"/>
-		<result property="bootTime"            column="BOOT_TIME"                    jdbcType="TIMESTAMP"/>
-		<result property="upTime"              column="UP_TIME"                      jdbcType="BIGINT"/>
 		<result property="os"                  column="OS"                           jdbcType="VARCHAR"/>
 		<result property="osPlatform"          column="OS_PLATFORM"                  jdbcType="VARCHAR"/>
 		<result property="osPlatformFamily"    column="PLATFORM_FAMILY"              jdbcType="VARCHAR"/>
@@ -23,8 +21,6 @@
 		(
 		HOST_ID
 		, HOST_NAME
-		, BOOT_TIME
-		, UP_TIME
 		, OS
 		, OS_PLATFORM
 		, PLATFORM_FAMILY
@@ -40,8 +36,6 @@
 		(
 		#{hostId, 			         jdbcType=VARCHAR}
 		,#{hostName,          	     jdbcType=VARCHAR}
-		,#{bootTime,          	     jdbcType=TIMESTAMP}
-		,#{upTime,            	     jdbcType=BIGINT}
 		,#{os,                	     jdbcType=VARCHAR}
 		,#{osPlatform,        	     jdbcType=VARCHAR}
 		,#{osPlatformFamily,         jdbcType=VARCHAR}
@@ -58,8 +52,6 @@
 	<update id="update" parameterType="hyper.momitor.model.Host">
 		update HM_HOST set
 		HOST_NAME             	= #{hostName,         	    jdbcType=VARCHAR},
-		BOOT_TIME             	= #{bootTime,         	    jdbcType=TIMESTAMP},
-		UP_TIME                 = #{upTime,           	    jdbcType=BIGINT},
 		OS                      = #{os,               	    jdbcType=VARCHAR},
 		OS_PLATFORM           	= #{osPlatform,       	    jdbcType=VARCHAR},
 		PLATFORM_FAMILY         = #{osPlatformFamily,        jdbcType=VARCHAR},

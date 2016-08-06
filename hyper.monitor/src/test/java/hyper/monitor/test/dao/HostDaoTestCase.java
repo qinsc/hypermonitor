@@ -1,6 +1,5 @@
 package hyper.monitor.test.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -27,8 +26,6 @@ public class HostDaoTestCase extends AbstractTestCase{
     private String testAdd(IHostService hostService) {
         Host host = new Host();
         host.setHostName("host1");
-        host.setBootTime(new Date());
-        host.setUpTime(190000);
         host.setCpuCores(12);
         host.setCpuThreads(24);
         host.setCpuModelName("intel core i7");
@@ -47,8 +44,6 @@ public class HostDaoTestCase extends AbstractTestCase{
     	Host host = hostService.queryOne(id);
     	
     	host.setHostName("host1New");
-        host.setBootTime(new Date());
-        host.setUpTime(1900111);
         host.setCpuCores(3);
         host.setCpuThreads(6);
         host.setCpuModelName("intel core i5");

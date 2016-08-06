@@ -1,7 +1,9 @@
-package hyper.momitor.service;
+package hyper.momitor.service.impl;
 
 import hyper.momitor.dao.IDiskDao;
 import hyper.momitor.model.Disk;
+import hyper.momitor.service.IDiskService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

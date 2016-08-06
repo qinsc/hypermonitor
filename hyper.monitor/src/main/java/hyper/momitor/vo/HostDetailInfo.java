@@ -1,12 +1,21 @@
-package hyper.momitor.model;
+/**
+ * 
+ */
+package hyper.momitor.vo;
 
-import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
-public class Host implements Serializable {
-	private static final long serialVersionUID = -1573793986719124323L;
-	
+/**
+ * @author qinscx
+ *
+ */
+public class HostDetailInfo {
 	private String hostId;
 	private String hostName;
+
+	private Date bootTime;
+	private long upTime;
 
 	private String os;
 	private String osPlatform;
@@ -17,9 +26,15 @@ public class Host implements Serializable {
 	private int cpuThreads;
 	private String cpuModelName;
 	private int cpuMhz;
-	private int memSize;
+	private int cpuUsage;
 
-	private String groupId;
+	private int memSize;
+	private int memUsage;
+	private HostGroupInfo hostGroup;
+
+	private List<NicInfo> nicInfos;
+	private List<DisklInfo> diskInfos;
+	private List<TagInfo> hostTags;
 
 	/**
 	 * @return the hostId
@@ -36,7 +51,6 @@ public class Host implements Serializable {
 		this.hostId = hostId;
 	}
 
-
 	/**
 	 * @return the hostName
 	 */
@@ -45,10 +59,41 @@ public class Host implements Serializable {
 	}
 
 	/**
-	 * @param hostName the hostName to set
+	 * @param hostName
+	 *            the hostName to set
 	 */
 	public void setHostName(String hostName) {
 		this.hostName = hostName;
+	}
+
+	/**
+	 * @return the bootTime
+	 */
+	public Date getBootTime() {
+		return bootTime;
+	}
+
+	/**
+	 * @param bootTime
+	 *            the bootTime to set
+	 */
+	public void setBootTime(Date bootTime) {
+		this.bootTime = bootTime;
+	}
+
+	/**
+	 * @return the upTime
+	 */
+	public long getUpTime() {
+		return upTime;
+	}
+
+	/**
+	 * @param upTime
+	 *            the upTime to set
+	 */
+	public void setUpTime(long upTime) {
+		this.upTime = upTime;
 	}
 
 	/**
@@ -172,6 +217,21 @@ public class Host implements Serializable {
 	}
 
 	/**
+	 * @return the cpuUsage
+	 */
+	public int getCpuUsage() {
+		return cpuUsage;
+	}
+
+	/**
+	 * @param cpuUsage
+	 *            the cpuUsage to set
+	 */
+	public void setCpuUsage(int cpuUsage) {
+		this.cpuUsage = cpuUsage;
+	}
+
+	/**
 	 * @return the memSize
 	 */
 	public int getMemSize() {
@@ -187,25 +247,78 @@ public class Host implements Serializable {
 	}
 
 	/**
-	 * @return the groupId
+	 * @return the memUsage
 	 */
-	public String getGroupId() {
-		return groupId;
+	public int getMemUsage() {
+		return memUsage;
 	}
 
 	/**
-	 * @param groupId
-	 *            the groupId to set
+	 * @param memUsage
+	 *            the memUsage to set
 	 */
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
+	public void setMemUsage(int memUsage) {
+		this.memUsage = memUsage;
 	}
 
 	/**
-	 * @return the serialversionuid
+	 * @return the hostGroup
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public HostGroupInfo getHostGroup() {
+		return hostGroup;
+	}
+
+	/**
+	 * @param hostGroup
+	 *            the hostGroup to set
+	 */
+	public void setHostGroup(HostGroupInfo hostGroup) {
+		this.hostGroup = hostGroup;
+	}
+
+	/**
+	 * @return the nicInfos
+	 */
+	public List<NicInfo> getNicInfos() {
+		return nicInfos;
+	}
+
+	/**
+	 * @param nicInfos
+	 *            the nicInfos to set
+	 */
+	public void setNicInfos(List<NicInfo> nicInfos) {
+		this.nicInfos = nicInfos;
+	}
+
+	/**
+	 * @return the diskInfos
+	 */
+	public List<DisklInfo> getDiskInfos() {
+		return diskInfos;
+	}
+
+	/**
+	 * @param diskInfos
+	 *            the diskInfos to set
+	 */
+	public void setDiskInfos(List<DisklInfo> diskInfos) {
+		this.diskInfos = diskInfos;
+	}
+
+	/**
+	 * @return the hostTags
+	 */
+	public List<TagInfo> getHostTags() {
+		return hostTags;
+	}
+
+	/**
+	 * @param hostTags
+	 *            the hostTags to set
+	 */
+	public void setHostTags(List<TagInfo> hostTags) {
+		this.hostTags = hostTags;
 	}
 
 	/*
@@ -215,19 +328,19 @@ public class Host implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Host [" + (hostId != null ? "hostId=" + hostId + ", " : "")
+		return "HostDetailInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "")
 				+ (hostName != null ? "hostName=" + hostName + ", " : "")
+				+ (bootTime != null ? "bootTime=" + bootTime + ", " : "") + "upTime=" + upTime + ", "
 				+ (os != null ? "os=" + os + ", " : "") + (osPlatform != null ? "osPlatform=" + osPlatform + ", " : "")
 				+ (osPlatformFamily != null ? "osPlatformFamily=" + osPlatformFamily + ", " : "")
 				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores="
 				+ cpuCores + ", cpuThreads=" + cpuThreads + ", "
 				+ (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz=" + cpuMhz
-				+ ", memSize=" + memSize + ", " + (groupId != null ? "groupId=" + groupId : "") + "]";
+				+ ", cpuUsage=" + cpuUsage + ", memSize=" + memSize + ", memUsage=" + memUsage + ", "
+				+ (hostGroup != null ? "hostGroup=" + hostGroup + ", " : "")
+				+ (nicInfos != null ? "nicInfos=" + nicInfos + ", " : "")
+				+ (diskInfos != null ? "diskInfos=" + diskInfos + ", " : "")
+				+ (hostTags != null ? "hostTags=" + hostTags : "") + "]";
 	}
 
 }
-
-
-
-  
-

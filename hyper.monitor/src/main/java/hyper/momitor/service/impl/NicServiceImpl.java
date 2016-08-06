@@ -1,7 +1,9 @@
-package hyper.momitor.service;
+package hyper.momitor.service.impl;
 
 import hyper.momitor.dao.INicDao;
 import hyper.momitor.model.Nic;
+import hyper.momitor.service.INicService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

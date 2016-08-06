@@ -15,7 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="assets/css/signin.css" />
 	<%@include file="views/common/common.jsp"%>
 </head>
-<body style="background-image: url(<%=contextPath%>/assets/img/login_bkg.jpg); background-size:cover; background-repeat: no-repeat;">
+<body style="background-image: url(<%=contextPath%>/assets/images/login_bkg.jpg); background-size:cover; background-repeat: no-repeat;">
 	<div class="container" >
 		<p class="form-signin-heading">Hyper Monitor</p>
 		<form class="form-signin" method="post" id="loginForm"
