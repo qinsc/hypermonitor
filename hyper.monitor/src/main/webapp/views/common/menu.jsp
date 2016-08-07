@@ -9,7 +9,7 @@
 	</div>
 </nav>
 
-<script src="../assets/js/jquery-1.10.2.js"></script>
+<script src="../assets/js/jquery.js"></script>
 <script type="text/javascript">
 	var menu = <%=request.getParameter("menu")%>;
 	if (menu == null){

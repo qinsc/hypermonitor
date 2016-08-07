@@ -10,6 +10,7 @@
 		<param-name>resteasy.resources</param-name>
 		<param-value>
 			hyper.momitor.controller.UserController,
+			hyper.momitor.controller.HostController
 		</param-value>
 	</context-param>
 	<context-param>
@@ -62,7 +63,7 @@
 			<param-value>
 			/login.jsp,
 			/assets/*,
-			/rest/users/login
+			/rest/*
 			</param-value>
 		</init-param>
 		<init-param>

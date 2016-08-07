@@ -20,9 +20,9 @@
 	<link href="../assets/css/custom-styles.css" rel="stylesheet" />
 	<!-- Datatables  Styles -->
 	<link href="../assets/css/dataTables.bootstrap.css" rel="stylesheet" />
-	<!-- Google Fonts-->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-	
+	<!-- datatables button -->
+	<link href="../assets/css/buttons.bootstrap.min.css" rel="stylesheet" />
+	<link href="../assets/css/buttons.dataTables.min.css rel="stylesheet" />
 	
 	<%@include file="common/common.jsp"%>
 </head>
@@ -44,6 +44,9 @@
 	<script src="../assets/js/custom-scripts.js"></script>
 	<script src="../assets/js/dataTables/jquery.dataTables.min.js"></script>
 	<script src="../assets/js/dataTables/dataTables.bootstrap.min.js"></script>
+	<script src="../assets/js/dataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
+	<!-- <script src="../assets/js/dataTables/extensions/Buttons/js/buttons.jqueryui.min.js"></script> -->
+	<script src="../assets/js/dataTables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
 </body>
 
 </html>

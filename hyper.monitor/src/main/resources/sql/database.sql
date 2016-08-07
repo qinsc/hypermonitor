@@ -37,6 +37,7 @@ create table HM_HOST
    HOST_ID              varchar(64)                    not null,
    GROUP_ID             varchar(64)                    null,
    HOST_NAME            varchar(64)                    null,
+   MANAGE_IP            varchar(64)                    null,
    OS                   varchar(100)                   null,
    OS_PLATFORM          varchar(100)                   null,
    PLATFORM_FAMILY      varchar(100)                   null,

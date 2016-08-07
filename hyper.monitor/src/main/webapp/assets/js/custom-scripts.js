@@ -5,7 +5,6 @@
 				$('.navbar-side').animate({left: '0px'});
 				$(this).removeClass('closed');
 				$('#page-wrapper').animate({'margin-left' : '220px'});
-				
 			}
 			else{
 			    $(this).addClass('closed');

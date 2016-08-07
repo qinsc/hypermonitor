@@ -6,6 +6,8 @@ package hyper.momitor.vo;
 import java.util.Date;
 import java.util.List;
 
+import hyper.momitor.model.Host;
+
 /**
  * @author qinscx
  *
@@ -14,6 +16,7 @@ public class HostDetailInfo {
 	private String hostId;
 	private String hostName;
 
+	private int online; // 0 为离线，1为在线
 	private Date bootTime;
 	private long upTime;
 
@@ -35,7 +38,24 @@ public class HostDetailInfo {
 	private List<NicInfo> nicInfos;
 	private List<DisklInfo> diskInfos;
 	private List<TagInfo> hostTags;
-
+	private String manageIp;
+	
+	public HostDetailInfo() {
+	}
+	
+	public HostDetailInfo(Host host) {
+		this.hostId = host.getHostId();
+		this.os = host.getOs();
+		this.osPlatform = host.getOsPlatform();
+		this.osPlatformFamily = host.getOsPlatformFamily();
+		this.osPlatformVersion = host.getOsPlatformVersion();
+		this.cpuCores = host.getCpuCores();
+		this.cpuThreads = host.getCpuThreads();
+		this.cpuModelName = host.getCpuModelName();
+		this.cpuMhz = host.getCpuMhz();
+		this.memSize = host.getMemSize();
+	}
+	
 	/**
 	 * @return the hostId
 	 */
@@ -64,6 +84,20 @@ public class HostDetailInfo {
 	 */
 	public void setHostName(String hostName) {
 		this.hostName = hostName;
+	}
+
+	/**
+	 * @return the online
+	 */
+	public int getOnline() {
+		return online;
+	}
+
+	/**
+	 * @param online the online to set
+	 */
+	public void setOnline(int online) {
+		this.online = online;
 	}
 
 	/**
@@ -321,6 +355,21 @@ public class HostDetailInfo {
 		this.hostTags = hostTags;
 	}
 
+	/**
+	 * @return the manageIp
+	 */
+	public String getManageIp() {
+		return manageIp;
+	}
+
+	/**
+	 * @param manageIp
+	 *            the manageIp to set
+	 */
+	public void setManageIp(String manageIp) {
+		this.manageIp = manageIp;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -340,7 +389,9 @@ public class HostDetailInfo {
 				+ (hostGroup != null ? "hostGroup=" + hostGroup + ", " : "")
 				+ (nicInfos != null ? "nicInfos=" + nicInfos + ", " : "")
 				+ (diskInfos != null ? "diskInfos=" + diskInfos + ", " : "")
-				+ (hostTags != null ? "hostTags=" + hostTags : "") + "]";
+				+ (hostTags != null ? "hostTags=" + hostTags + ", " : "")
+				+ (manageIp != null ? "manageIp=" + manageIp : "") + "]";
 	}
 
 }
+

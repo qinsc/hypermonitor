@@ -17,10 +17,12 @@ public class HostDaoTestCase extends AbstractTestCase{
         IHostService hostService = (IHostService)context.getBean("hostService");
 
         // test add
-        String id = this.testAdd(hostService);
-        testUpdate(hostService, id);
-        testQueryAll(hostService);
-        testDelete(hostService, id);
+//        String id = this.testAdd(hostService);
+//        testUpdate(hostService, id);
+//        testQueryAll(hostService);
+//        testDelete(hostService, id);
+        
+        	prepareTestData(hostService);
     }
 
     private String testAdd(IHostService hostService) {
@@ -67,5 +69,37 @@ public class HostDaoTestCase extends AbstractTestCase{
     	hostService.delete(id);
     	Host host = hostService.queryOne(id);
     	Assert.assertNull(host);
+    }
+    
+    private void prepareTestData(IHostService hostService) {
+    	Host host = new Host();
+        host.setHostName("win7_1");
+        host.setCpuCores(4);
+        host.setCpuThreads(4);
+        host.setCpuModelName("intel core i7");
+        host.setCpuMhz(3400);
+        host.setMemSize(2048);
+        host.setOs("win7");
+        host.setOsPlatform("windows");
+        host.setOsPlatformFamily("windows 7");
+        host.setOsPlatformVersion("7");
+        host.setManageIp("192.168.88.106");
+
+        hostService.add(host);
+        
+        host = new Host();
+        host.setHostName("win7_2");
+        host.setCpuCores(2);
+        host.setCpuThreads(2);
+        host.setCpuModelName("intel core i7");
+        host.setCpuMhz(3400);
+        host.setMemSize(1024);
+        host.setOs("win7");
+        host.setOsPlatform("windows");
+        host.setOsPlatformFamily("windows 7");
+        host.setOsPlatformVersion("7");
+        host.setManageIp("192.168.88.107");
+
+        hostService.add(host);
     }
 }
