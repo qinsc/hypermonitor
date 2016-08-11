@@ -16,11 +16,8 @@ public class HostInfo {
 	private String hostName;
 	private String manageIp;
 	private String os;
-	private String hostGroups;
-	private String tags;
-	private int cpuUsage;
-	private int memUsage;
-	private String message;
+	private String desc;
+	private String msgToSend;
 
 	public HostInfo() {
 	}
@@ -28,6 +25,7 @@ public class HostInfo {
 	public HostInfo(Host host) {
 		this.hostId = host.getHostId();
 		this.hostName = host.getHostName();
+		this.desc = host.getDesc();
 		this.os = host.getOs();
 		this.manageIp = host.getManageIp();
 	}
@@ -108,37 +106,6 @@ public class HostInfo {
 	}
 
 	/**
-	 * @return the hostGroups
-	 */
-	public String getHostGroups() {
-		return hostGroups;
-	}
-
-	/**
-	 * @param hostGroups
-	 *            the hostGroups to set
-	 */
-	public void setHostGroups(String hostGroups) {
-		this.hostGroups = hostGroups;
-	}
-
-	/**
-	 * @return the tags
-	 */
-	public String getTags() {
-		return tags;
-	}
-
-	/**
-	 * @param tags
-	 *            the tags to set
-	 */
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
-	
-
-	/**
 	 * @return the selected
 	 */
 	public boolean isSelected() {
@@ -146,67 +113,54 @@ public class HostInfo {
 	}
 
 	/**
-	 * @param selected the selected to set
+	 * @param selected
+	 *            the selected to set
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
 
 	/**
-	 * @return the cpuUsage
+	 * @return Returns the desc.
 	 */
-	public int getCpuUsage() {
-		return cpuUsage;
+	public String getDesc() {
+		return desc;
 	}
 
 	/**
-	 * @param cpuUsage the cpuUsage to set
+	 * @param desc
+	 *            The desc to set.
 	 */
-	public void setCpuUsage(int cpuUsage) {
-		this.cpuUsage = cpuUsage;
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	/**
-	 * @return the memUsage
+	 * @return Returns the msgToSend.
 	 */
-	public int getMemUsage() {
-		return memUsage;
+	public String getMsgToSend() {
+		return msgToSend;
 	}
 
 	/**
-	 * @param memUsage the memUsage to set
+	 * @param msgToSend
+	 *            The msgToSend to set.
 	 */
-	public void setMemUsage(int memUsage) {
-		this.memUsage = memUsage;
+	public void setMsgToSend(String msgToSend) {
+		this.msgToSend = msgToSend;
 	}
 
-	/**
-	 * @return the message
-	 */
-	public String getMessage() {
-		return message;
-	}
-
-	/**
-	 * @param message the message to set
-	 */
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "HostInfo [selected=" + selected + ", " + (hostId != null ? "hostId=" + hostId + ", " : "") + "online="
-				+ online + ", " + (hostName != null ? "hostName=" + hostName + ", " : "")
-				+ (manageIp != null ? "manageIp=" + manageIp + ", " : "") + (os != null ? "os=" + os + ", " : "")
-				+ (hostGroups != null ? "hostGroups=" + hostGroups + ", " : "")
-				+ (tags != null ? "tags=" + tags + ", " : "") + "cpuUsage=" + cpuUsage + ", memUsage=" + memUsage + ", "
-				+ (message != null ? "message=" + message : "") + "]";
+		return "HostInfo [selected=" + selected + ", " + (hostId != null ? "hostId=" + hostId + ", " : "") + "online=" + online + ", "
+				+ (hostName != null ? "hostName=" + hostName + ", " : "") + (manageIp != null ? "manageIp=" + manageIp + ", " : "")
+				+ (os != null ? "os=" + os + ", " : "") + (desc != null ? "desc=" + desc + ", " : "") + (msgToSend != null ? "msgToSend=" + msgToSend : "")
+				+ "]";
 	}
-
-	
 
 }

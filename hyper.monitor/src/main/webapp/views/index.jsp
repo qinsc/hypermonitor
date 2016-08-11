@@ -45,7 +45,6 @@
 	<script src="../assets/js/dataTables/jquery.dataTables.min.js"></script>
 	<script src="../assets/js/dataTables/dataTables.bootstrap.min.js"></script>
 	<script src="../assets/js/dataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
-	<!-- <script src="../assets/js/dataTables/extensions/Buttons/js/buttons.jqueryui.min.js"></script> -->
 	<script src="../assets/js/dataTables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
 </body>
 

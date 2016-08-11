@@ -25,47 +25,22 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">主机管理</div>
 		<div class="panel-body">
-			<div class="table-responsive">
-				<table id="hostTable" class="table table-striped table-bordered table-hover" >
+			<div class="table-responsive" style="min-height: 400px;">
+				<table id="hostTable"  class="table table-striped table-bordered table-hover" >
 					<thead>
 						<tr>
 							<th width="5%">
-								<input type="checkbox"/ id="headSelect">
+								<input type="checkbox" id="headSelect" onclick="doSelectRows()"">
 							</th>
 							<th width="5%">状态</th>
 							<th width="20%">主机名</th>
 							<th width="20%">管理IP</th>
 							<th width="15%">系统</th>
-							<th width="10%">CPU使用率</th>
-							<th width="15%">内存使用率</th>
+							<th width="25%">备注</th>
 							<th width="10%" >操作</th>
 						</tr>
 					</thead>
-					<tbody>
-						<!-- <tr>
-							<td>
-								<input type="checkbox"/ id="rowSelect">
-							</td>
-							<td style="color: red">离线</td>
-							<td>host1</td>
-							<td>192.168.99.10.1</td>
-							<td>windows7</td>
-							<td>group1</td>
-							<td>tag1</td>
-							<td>
-								<div class="btn-group">
-									<button data-toggle="dropdown"
-										class="btn btn-info dropdown-toggle" aria-expanded="false">
-										操作 <span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu">
-										<li><a href="javascript:osLogout()">注销</a></li>
-										<li><a href="javascript:osShutdown()">关机</a></li>
-										<li><a href="javascript:sendMsg()">发送消息</a></li>
-									</ul>
-								</div>
-							</td>
-						</tr> -->
+					<tbody id="tbody">
 					</tbody>
 				</table>
 			</div>
@@ -77,25 +52,28 @@
 	function heredoc(fn) {
 	    return fn.toString().split('\n').slice(1,-1).join('\n') + '\n'
 	}
-
+	
 	var operations = heredoc(function(){/*
 		<div class="btn-group">
 			<button data-toggle="dropdown"
 				class="btn btn-info dropdown-toggle" aria-expanded="false">
 				操作 <span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu">
-				<li><a href="javascript:osLogout()">注销</a></li>
-				<li><a href="javascript:osShutdown()">关机</a></li>
-				<li><a href="javascript:sendMsg()">发送消息</a></li>
+			<ul class="dropdown-menu dropdown-menu-right"">
+				<li><a href="javascript:osLogout(this)">注销</a></li>
+				<li><a href="javascript:osShutdown(this)">关机</a></li>
+				<li><a href="javascript:osReboot(this)">重启</a></li>
+				<li class="divider"></li>
+				<li><a href="javascript:sendMsg(this)">发送消息</a></li>
+				<li class="divider"></li>
+				<li><a href="javascript:addHostDesc(this)">备注</a></li>
 			</ul>
 		</div>
 	*/});
-
+	
 	var option = {
 		dom: 'fBrtip',
-		buttons: [
-		          {
+		buttons: [ {
 		              text: '注销',
 		              action: function ( e, dt, node, config ) {
 		            	  osLogout();
@@ -103,6 +81,12 @@
 		          },
 		          {
 		              text: '关机',
+		              action: function ( e, dt, node, config ) {
+		            	  osShutdown();
+		              }
+		          },
+		          {
+		              text: '重启',
 		              action: function ( e, dt, node, config ) {
 		            	  osShutdown();
 		              }
@@ -118,67 +102,89 @@
 		              action: function ( e, dt, node, config ) {
 		            	  addHosts();
 		              }
-		          }
-		      ],
-		      "columns" : [
-		                   {"data" : "selected"},  
-		                   {"data" : "online"},  
-		                   {"data" : "hostName"},  
-		                   {"data" : "manageIp"},  
-		                   {"data" : "os"},  
-		                   {"data" : "cpuUsage"},  
-		                   {"data" : "memUsage"},  
-		                   {"data" : function (e) {
-		                	   return operations;
-		                   	}
-		                   }
-		                   ],
-             "columnDefs": [ 
-                           {
-                        	   "targets": 0,
-   			          	       "render": function ( data, type, full, meta ) {
-   			          	    	   if (data){
-   			          	    		   return '<input type="checkbox" checked="checked" >';
-   			          	    	   } else {
-   			          	    			return '<input type="checkbox">';
-   			          	    	   }
-   			          	       }
-                           },
-			               {
-			          	    "targets": 1,
-			          	    "render": function ( data, type, full, meta ) {
-			          	    	if (data == 1){
-			          	    		return '<h style="color:green;">在线<h>';
-			          	    	} else {
-			          	    		return '<h style="color: red;">离线<h>';
-			          	    	}
-			          	      }
-			          	  	}
-			               ]
+		          } ],
+      "columns" : [ {
+		                "data":   "selected",
+		                render: function ( data, type, row ) {
+		                    if ( type === 'display' ) {
+		                        return '<input type="checkbox" class="editor-active">';
+		                    }
+		                    return data;
+		                },
+		                className: "dt-body-center"
+		           },
+                   {"data" : "online"},  
+                   {"data" : "hostName"},  
+                   {"data" : "manageIp"},  
+                   {"data" : "os"},  
+                   {"data" : "desc"},  
+                   {"data" : function (e) {
+                	   return operations;
+                   	}
+                   } ],
+	"columnDefs" : [ {
+			"targets" : 0,
+			"render" : function(data, type, full, meta) {
+				if (data) {
+					return '<input type="checkbox" checked="checked" >';
+				} else {
+					return '<input type="checkbox">';
+				}
+			}
+		}, {
+			"targets" : 1,
+			"render" : function(data, type, full, meta) {
+				if (data == 1) {
+					return '<h style="color:green;">在线<h>';
+				} else {
+					return '<h style="color: red;">离线<h>';
+				}
+			}
+		} ]
 	};
 	
-	$(document).ready(function () {
+	$(document).ready(
+	function() {
 		initDatatables("hostTable", option);
 		loadHosts();
-	});
+	}); 
 	
-	function osLogout(){
-		 alert("osLogout");
+	var selected = false;
+	function doSelectRows() {
+       	if (selected){
+       		$("#tbody :checkbox").attr("checked", false);
+       	} else {
+           	$("#tbody :checkbox").attr("checked", true);
+       	}
+       	selected = !selected;
+    };
+
+	function osLogout(row) {
+		debugger;
+		alert("osLogout = " + row);
 	}
-	
-	function osShutdown(){
-		 alert("osShutdown");
+
+	function osShutdown(row) {
+		alert("osShutdown");
 	}
-	
-	function sendMsg(){
-		 alert("sendMsg");
+
+	function osReboot(row) {
+		alert("osReboot");
 	}
-	
-	function addHosts(){
-		 alert("addHosts");
+
+	function sendMsg(row) {
+		alert("sendMsg");
 	}
-	
-	function loadHosts(){
+
+	function addHosts(row) {
+		alert("addHosts");
+	}
+
+	function addHostDesc(row) {
+		alert("addHostDesc");
+	}
+
+	function loadHosts() {
 		$("#hostTable").DataTable().ajax.url("<%=contextPath%>/rest/hosts/").load();
 	}
 </script>

@@ -6,7 +6,6 @@
 		<result property="device"              column="DEVICE"                       jdbcType="VARCHAR"/>
 		<result property="path"          	   column="PATH"                         jdbcType="VARCHAR"/>
 		<result property="fsType"    		   column="FSTYPE"              		 jdbcType="VARCHAR"/>
-		<result property="opts"   			   column="OPTS"          				 jdbcType="VARCHAR"/>
 		<result property="hostId"   		   column="HOST_ID"          			 jdbcType="VARCHAR"/>
 	</resultMap>
 
@@ -17,7 +16,6 @@
 		, DEVICE
 		, PATH
 		, FSTYPE
-		, OPTS
 		, HOST_ID
 		)
 		values
@@ -26,7 +24,6 @@
 		,#{device,      jdbcType=VARCHAR}
 		,#{path,        jdbcType=VARCHAR}
 		,#{fsType,      jdbcType=VARCHAR}
-		,#{opts,        jdbcType=VARCHAR}
 		,#{hostId,      jdbcType=VARCHAR}
 		)
 	</insert>
@@ -36,7 +33,6 @@
 			DEVICE             		= #{device,         	   	 jdbcType=VARCHAR},
 			PATH          			= #{path,            		 jdbcType=VARCHAR},
 			FSTYPE                  = #{fsType,                  jdbcType=VARCHAR},
-			OPTS     		    	= #{opts,                    jdbcType=VARCHAR},
 			HOST_ID                 = #{hostId,                  jdbcType=VARCHAR}
 		where
 			DISK_Id       			= #{diskId,					 jdbcType=VARCHAR}

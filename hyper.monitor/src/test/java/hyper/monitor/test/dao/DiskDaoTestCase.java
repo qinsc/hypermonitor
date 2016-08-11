@@ -29,7 +29,6 @@ public class DiskDaoTestCase extends AbstractTestCase{
         disk.setDevice("/dev/sda1");
         disk.setPath("/mnt");
         disk.setFsType("ntfs");
-        disk.setOpts("opts");
         disk.setHostId("11");
 
         return diskService.add(disk);
@@ -41,7 +40,6 @@ public class DiskDaoTestCase extends AbstractTestCase{
         disk.setDevice("/dev/sda2");
         disk.setPath("/mnt1");
         disk.setFsType("ntfs1");
-        disk.setOpts("opts1");
         disk.setHostId("111");
 
         diskService.update(disk);

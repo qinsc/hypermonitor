@@ -19,7 +19,6 @@ public class ModelHelper {
 		host.setOsPlatformFamily(detailInfo.getOsPlatformFamily());
 		host.setOsPlatformVersion(detailInfo.getOsPlatformVersion());
 		host.setCpuCores(detailInfo.getCpuCores());
-		host.setCpuThreads(detailInfo.getCpuThreads());
 		host.setCpuModelName(detailInfo.getCpuModelName());
 		host.setCpuMhz(detailInfo.getCpuMhz());
 		host.setMemSize(detailInfo.getMemSize());

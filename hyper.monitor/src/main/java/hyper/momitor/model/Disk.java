@@ -9,7 +9,6 @@ public class Disk implements Serializable {
 	private String device;
 	private String path;
 	private String fsType;
-	private String opts;
 
 	private String hostId;
 
@@ -74,21 +73,6 @@ public class Disk implements Serializable {
 	}
 
 	/**
-	 * @return the opts
-	 */
-	public String getOpts() {
-		return opts;
-	}
-
-	/**
-	 * @param opts
-	 *            the opts to set
-	 */
-	public void setOpts(String opts) {
-		this.opts = opts;
-	}
-
-	/**
 	 * @return the hostId
 	 */
 	public String getHostId() {
@@ -117,10 +101,9 @@ public class Disk implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Disk [" + (diskId != null ? "diskId=" + diskId + ", " : "")
-				+ (device != null ? "device=" + device + ", " : "") + (path != null ? "path=" + path + ", " : "")
-				+ (fsType != null ? "fsType=" + fsType + ", " : "") + (opts != null ? "opts=" + opts + ", " : "")
-				+ (hostId != null ? "hostId=" + hostId : "") + "]";
+		return "Disk [" + (diskId != null ? "diskId=" + diskId + ", " : "") + (device != null ? "device=" + device + ", " : "")
+				+ (path != null ? "path=" + path + ", " : "") + (fsType != null ? "fsType=" + fsType + ", " : "") + (hostId != null ? "hostId=" + hostId : "")
+				+ "]";
 	}
 
 }

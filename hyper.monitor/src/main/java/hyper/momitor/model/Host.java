@@ -7,6 +7,7 @@ public class Host implements Serializable {
 
 	private String hostId;
 	private String hostName;
+	private String desc;
 
 	private String os;
 	private String osPlatform;
@@ -14,7 +15,6 @@ public class Host implements Serializable {
 	private String osPlatformVersion;
 
 	private int cpuCores;
-	private int cpuThreads;
 	private String cpuModelName;
 	private int cpuMhz;
 	private int memSize;
@@ -128,21 +128,6 @@ public class Host implements Serializable {
 	}
 
 	/**
-	 * @return the cpuThreads
-	 */
-	public int getCpuThreads() {
-		return cpuThreads;
-	}
-
-	/**
-	 * @param cpuThreads
-	 *            the cpuThreads to set
-	 */
-	public void setCpuThreads(int cpuThreads) {
-		this.cpuThreads = cpuThreads;
-	}
-
-	/**
 	 * @return the cpuModelName
 	 */
 	public String getCpuModelName() {
@@ -217,6 +202,21 @@ public class Host implements Serializable {
 		this.manageIp = manageIp;
 	}
 
+	/**
+	 * @return Returns the desc.
+	 */
+	public String getDesc() {
+		return desc;
+	}
+
+	/**
+	 * @param desc
+	 *            The desc to set.
+	 */
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -224,15 +224,13 @@ public class Host implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Host [" + (hostId != null ? "hostId=" + hostId + ", " : "")
-				+ (hostName != null ? "hostName=" + hostName + ", " : "") + (os != null ? "os=" + os + ", " : "")
+		return "Host [" + (hostId != null ? "hostId=" + hostId + ", " : "") + (hostName != null ? "hostName=" + hostName + ", " : "")
+				+ (desc != null ? "desc=" + desc + ", " : "") + (os != null ? "os=" + os + ", " : "")
 				+ (osPlatform != null ? "osPlatform=" + osPlatform + ", " : "")
 				+ (osPlatformFamily != null ? "osPlatformFamily=" + osPlatformFamily + ", " : "")
-				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores="
-				+ cpuCores + ", cpuThreads=" + cpuThreads + ", "
-				+ (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz=" + cpuMhz
-				+ ", memSize=" + memSize + ", " + (groupId != null ? "groupId=" + groupId + ", " : "")
-				+ (manageIp != null ? "manageIp=" + manageIp : "") + "]";
+				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores=" + cpuCores + ", "
+				+ (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz=" + cpuMhz + ", memSize=" + memSize + ", "
+				+ (groupId != null ? "groupId=" + groupId + ", " : "") + (manageIp != null ? "manageIp=" + manageIp : "") + "]";
 	}
 
 }

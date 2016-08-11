@@ -26,7 +26,6 @@ public class HostDetailInfo {
 	private String osPlatformVersion;
 
 	private int cpuCores;
-	private int cpuThreads;
 	private String cpuModelName;
 	private int cpuMhz;
 	private int cpuUsage;
@@ -39,10 +38,10 @@ public class HostDetailInfo {
 	private List<DisklInfo> diskInfos;
 	private List<TagInfo> hostTags;
 	private String manageIp;
-	
+
 	public HostDetailInfo() {
 	}
-	
+
 	public HostDetailInfo(Host host) {
 		this.hostId = host.getHostId();
 		this.os = host.getOs();
@@ -50,12 +49,11 @@ public class HostDetailInfo {
 		this.osPlatformFamily = host.getOsPlatformFamily();
 		this.osPlatformVersion = host.getOsPlatformVersion();
 		this.cpuCores = host.getCpuCores();
-		this.cpuThreads = host.getCpuThreads();
 		this.cpuModelName = host.getCpuModelName();
 		this.cpuMhz = host.getCpuMhz();
 		this.memSize = host.getMemSize();
 	}
-	
+
 	/**
 	 * @return the hostId
 	 */
@@ -94,7 +92,8 @@ public class HostDetailInfo {
 	}
 
 	/**
-	 * @param online the online to set
+	 * @param online
+	 *            the online to set
 	 */
 	public void setOnline(int online) {
 		this.online = online;
@@ -203,21 +202,6 @@ public class HostDetailInfo {
 	 */
 	public void setCpuCores(int cpuCores) {
 		this.cpuCores = cpuCores;
-	}
-
-	/**
-	 * @return the cpuThreads
-	 */
-	public int getCpuThreads() {
-		return cpuThreads;
-	}
-
-	/**
-	 * @param cpuThreads
-	 *            the cpuThreads to set
-	 */
-	public void setCpuThreads(int cpuThreads) {
-		this.cpuThreads = cpuThreads;
 	}
 
 	/**
@@ -377,21 +361,15 @@ public class HostDetailInfo {
 	 */
 	@Override
 	public String toString() {
-		return "HostDetailInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "")
-				+ (hostName != null ? "hostName=" + hostName + ", " : "")
-				+ (bootTime != null ? "bootTime=" + bootTime + ", " : "") + "upTime=" + upTime + ", "
-				+ (os != null ? "os=" + os + ", " : "") + (osPlatform != null ? "osPlatform=" + osPlatform + ", " : "")
+		return "HostDetailInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "") + (hostName != null ? "hostName=" + hostName + ", " : "")
+				+ (bootTime != null ? "bootTime=" + bootTime + ", " : "") + "upTime=" + upTime + ", " + (os != null ? "os=" + os + ", " : "")
+				+ (osPlatform != null ? "osPlatform=" + osPlatform + ", " : "")
 				+ (osPlatformFamily != null ? "osPlatformFamily=" + osPlatformFamily + ", " : "")
-				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores="
-				+ cpuCores + ", cpuThreads=" + cpuThreads + ", "
-				+ (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz=" + cpuMhz
-				+ ", cpuUsage=" + cpuUsage + ", memSize=" + memSize + ", memUsage=" + memUsage + ", "
-				+ (hostGroup != null ? "hostGroup=" + hostGroup + ", " : "")
-				+ (nicInfos != null ? "nicInfos=" + nicInfos + ", " : "")
-				+ (diskInfos != null ? "diskInfos=" + diskInfos + ", " : "")
-				+ (hostTags != null ? "hostTags=" + hostTags + ", " : "")
-				+ (manageIp != null ? "manageIp=" + manageIp : "") + "]";
+				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores=" + cpuCores + ", "
+				+ (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz=" + cpuMhz + ", cpuUsage=" + cpuUsage + ", memSize=" + memSize
+				+ ", memUsage=" + memUsage + ", " + (hostGroup != null ? "hostGroup=" + hostGroup + ", " : "")
+				+ (nicInfos != null ? "nicInfos=" + nicInfos + ", " : "") + (diskInfos != null ? "diskInfos=" + diskInfos + ", " : "")
+				+ (hostTags != null ? "hostTags=" + hostTags + ", " : "") + (manageIp != null ? "manageIp=" + manageIp : "") + "]";
 	}
 
 }
-

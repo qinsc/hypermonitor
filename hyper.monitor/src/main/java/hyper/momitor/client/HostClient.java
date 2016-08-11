@@ -6,9 +6,6 @@ package hyper.momitor.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import hyper.momitor.exception.HMException;
 import hyper.momitor.model.Host;
 import hyper.momitor.vo.HostDetailInfo;

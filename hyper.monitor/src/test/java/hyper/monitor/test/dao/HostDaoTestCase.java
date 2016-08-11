@@ -29,7 +29,6 @@ public class HostDaoTestCase extends AbstractTestCase{
         Host host = new Host();
         host.setHostName("host1");
         host.setCpuCores(12);
-        host.setCpuThreads(24);
         host.setCpuModelName("intel core i7");
         host.setCpuMhz(3400);
         host.setMemSize(2048);
@@ -47,7 +46,6 @@ public class HostDaoTestCase extends AbstractTestCase{
     	
     	host.setHostName("host1New");
         host.setCpuCores(3);
-        host.setCpuThreads(6);
         host.setCpuModelName("intel core i5");
         host.setCpuMhz(3411);
         host.setMemSize(2099);
@@ -74,8 +72,8 @@ public class HostDaoTestCase extends AbstractTestCase{
     private void prepareTestData(IHostService hostService) {
     	Host host = new Host();
         host.setHostName("win7_1");
+        host.setDesc("host1 is a test host1");
         host.setCpuCores(4);
-        host.setCpuThreads(4);
         host.setCpuModelName("intel core i7");
         host.setCpuMhz(3400);
         host.setMemSize(2048);
@@ -89,8 +87,8 @@ public class HostDaoTestCase extends AbstractTestCase{
         
         host = new Host();
         host.setHostName("win7_2");
+        host.setDesc("host2 is a test host2");
         host.setCpuCores(2);
-        host.setCpuThreads(2);
         host.setCpuModelName("intel core i7");
         host.setCpuMhz(3400);
         host.setMemSize(1024);

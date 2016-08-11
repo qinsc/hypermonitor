@@ -25,7 +25,6 @@ create table HM_DISK
    DEVICE               varchar(100)                   null,
    PATH                 varchar(128)                   null,
    FSTYPE               varchar(32)                    null,
-   OPTS                 varchar(128)                   null,
    constraint PK_HM_DISK primary key clustered (DISK_ID)
 );
 
@@ -37,13 +36,13 @@ create table HM_HOST
    HOST_ID              varchar(64)                    not null,
    GROUP_ID             varchar(64)                    null,
    HOST_NAME            varchar(64)                    null,
+   HOST_DESC            varchar(512)                   null,
    MANAGE_IP            varchar(64)                    null,
    OS                   varchar(100)                   null,
    OS_PLATFORM          varchar(100)                   null,
    PLATFORM_FAMILY      varchar(100)                   null,
    OS_PLATFORM_VERSION  varchar(100)                   null,
    CPU_CORES            integer                        null,
-   CPU_THREADS          integer                        null,
    CPU_MODEL_NAME       varchar(100)                   null,
    CPU_MHZ              integer                        null,
    MEM_SIZE             integer                        null,
