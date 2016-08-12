@@ -70,34 +70,37 @@ public class HostDaoTestCase extends AbstractTestCase{
     }
     
     private void prepareTestData(IHostService hostService) {
-    	Host host = new Host();
-        host.setHostName("win7_1");
-        host.setDesc("host1 is a test host1");
-        host.setCpuCores(4);
-        host.setCpuModelName("intel core i7");
-        host.setCpuMhz(3400);
-        host.setMemSize(2048);
-        host.setOs("win7");
-        host.setOsPlatform("windows");
-        host.setOsPlatformFamily("windows 7");
-        host.setOsPlatformVersion("7");
-        host.setManageIp("192.168.88.106");
-
-        hostService.add(host);
+    	
+    	for (int i = 0; i < 60; i ++) {
+	    	Host host = new Host();
+	        host.setHostName("win7_"+i);
+	        host.setDesc("host_desc_"+i);
+	        host.setCpuCores(4);
+	        host.setCpuModelName("intel core i7");
+	        host.setCpuMhz(3400 + i);
+	        host.setMemSize(2048 + i);
+	        host.setOs("win7");
+	        host.setOsPlatform("windows");
+	        host.setOsPlatformFamily("windows 7");
+	        host.setOsPlatformVersion("7");
+	        host.setManageIp("192.168.88" + (106 + i));
+	
+	        hostService.add(host);
+    	}
         
-        host = new Host();
-        host.setHostName("win7_2");
-        host.setDesc("host2 is a test host2");
-        host.setCpuCores(2);
-        host.setCpuModelName("intel core i7");
-        host.setCpuMhz(3400);
-        host.setMemSize(1024);
-        host.setOs("win7");
-        host.setOsPlatform("windows");
-        host.setOsPlatformFamily("windows 7");
-        host.setOsPlatformVersion("7");
-        host.setManageIp("192.168.88.107");
-
-        hostService.add(host);
+//        host = new Host();
+//        host.setHostName("win7_2");
+//        host.setDesc("host2 is a test host2");
+//        host.setCpuCores(2);
+//        host.setCpuModelName("intel core i7");
+//        host.setCpuMhz(3400);
+//        host.setMemSize(1024);
+//        host.setOs("win7");
+//        host.setOsPlatform("windows");
+//        host.setOsPlatformFamily("windows 7");
+//        host.setOsPlatformVersion("7");
+//        host.setManageIp("192.168.88.107");
+//
+//        hostService.add(host);
     }
 }

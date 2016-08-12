@@ -27,14 +27,16 @@
 	<%@include file="common/common.jsp"%>
 </head>
 
-<body>
-	<div id="wrapper">
+<body class="page-container-bg-solid page-sidebar-closed-hide-logo">
+	<div id="wrapper" class="page-container">
 		<%@include file="/views/common/header.jsp"%>
 		<%@include file="/views/common/menu.jsp"%>
 		
-		<div id="page-wrapper">
-			<div id="page-inner">
-				<jsp:include page="<%=target %>" flush="true" />
+		<div id="page-wrapper" class="page-content-wrapper">
+			<div class="page-content">
+				<div id="page-inner"  class="page-content-body">
+					<jsp:include page="<%=target %>" flush="true" />
+				</div>
 			</div>
 		</div>
 	</div>
