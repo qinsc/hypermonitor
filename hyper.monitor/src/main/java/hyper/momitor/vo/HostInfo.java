@@ -10,7 +10,6 @@ import hyper.momitor.model.Host;
  *
  */
 public class HostInfo {
-	private boolean selected;
 	private String hostId;
 	private int online; // 0 为离线，1为在线
 	private String hostName;
@@ -106,21 +105,6 @@ public class HostInfo {
 	}
 
 	/**
-	 * @return the selected
-	 */
-	public boolean isSelected() {
-		return selected;
-	}
-
-	/**
-	 * @param selected
-	 *            the selected to set
-	 */
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
-
-	/**
 	 * @return Returns the desc.
 	 */
 	public String getDesc() {
@@ -157,9 +141,10 @@ public class HostInfo {
 	 */
 	@Override
 	public String toString() {
-		return "HostInfo [selected=" + selected + ", " + (hostId != null ? "hostId=" + hostId + ", " : "") + "online=" + online + ", "
-				+ (hostName != null ? "hostName=" + hostName + ", " : "") + (manageIp != null ? "manageIp=" + manageIp + ", " : "")
-				+ (os != null ? "os=" + os + ", " : "") + (desc != null ? "desc=" + desc + ", " : "") + (msgToSend != null ? "msgToSend=" + msgToSend : "")
+		return "HostInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "") + "online=" + online + ", "
+				+ (hostName != null ? "hostName=" + hostName + ", " : "")
+				+ (manageIp != null ? "manageIp=" + manageIp + ", " : "") + (os != null ? "os=" + os + ", " : "")
+				+ (desc != null ? "desc=" + desc + ", " : "") + (msgToSend != null ? "msgToSend=" + msgToSend : "")
 				+ "]";
 	}
 

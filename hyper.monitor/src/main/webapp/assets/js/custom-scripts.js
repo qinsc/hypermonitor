@@ -14,7 +14,7 @@
 		});
 	});
 }(jQuery));
-
+/*
 var language = {
 		"sProcessing": "处理中...",
         "sLengthMenu": "显示&nbsp; _MENU_  &nbsp;项结果",
@@ -43,4 +43,4 @@ var language = {
 function initDatatables(tableId, option){
 	option = $.extend(true, {"language": language}, option);
 	$('#'+ tableId).DataTable(option);
-}
+}*/
