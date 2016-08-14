@@ -42,6 +42,7 @@
 	<script src="../assets/js/jquery.js"></script>
 	<script src="../assets/js/jquery.uniform.js"></script>
 	<script src="../assets/js/bootstrap.min.js"></script>
+	<script src="../assets/js/jquery.bootstrap.min.js"></script>
 	<script src="../assets/js/dataTables/jquery.dataTables.min.js"></script>
 	<script src="../assets/js/dataTables/dataTables.bootstrap.min.js"></script>
 	<script src="../assets/js/dataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>

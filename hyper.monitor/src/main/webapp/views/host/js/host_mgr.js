@@ -20,7 +20,9 @@ function render_host_operations(data, type, row){
 }
 
 var hostGrid = new Datatable();
-function initHostDatatables(contextPath, tableId){
+var contextPath;
+function initHostDatatables(ctxPath, tableId){
+	contextPath = ctxPath;
 	hostGrid.init({
         src: $("#"+tableId),
         idField:"hostId",
@@ -48,7 +50,7 @@ function initHostDatatables(contextPath, tableId){
 		          {
 		              text: '重启',
 		              action: function ( e, dt, node, config ) {
-		            	  osShutdown();
+		            	  osReboot();
 		              }
 		          },
 		          {
@@ -78,46 +80,170 @@ function initHostDatatables(contextPath, tableId){
     });
 }
 
+var addHostGrid = new Datatable();
+function initAddHostDatatables(tableId){
+	addHostGrid.init({
+        src: $("#"+tableId),
+        idField:"hostId",
+        dataTable: {
+        	dom: 'rtip',
+//            "ajax": {
+//            	 url:contextPath+"/rest/hosts/",
+//            	 type:"GET"
+//             }, 
+             "pageLength": 5,
+             "columns":[
+                 {"data":"check"},
+                 {"data" : "hostName"},  
+                 {"data" : "manageIp"},  
+             ],
+        }
+    });
+}
+
 $(document).delegate(".btn.btn-primary","click",function(){
-    $("#myModal #myModalLabel").text("发送消息中 ....");
-    // ajax
-    $('#myModal').modal({keyboard:false,show:true})
+	var opt = $("#myModal #opt").val();
+	var optMsg = "";
+	if (opt == "sendMsg"){
+		optMsg = "发送此消息";
+	} else {
+		optMsg = "修改此备注";
+	}
+	
+	$.messager.confirm("确认", "确定要"+ optMsg+"吗?", function() { 
+		var ids = $("#myModal #ids").val(); 
+		var opt = $("#myModal #opt").val(); 
+		var text = $("#myModal #text").val();
+		
+		debugger;
+		var url = contextPath+"/rest/hosts/";
+		var data = {};
+		var message = "";
+		if (opt == "sendMsg"){
+			url += "message";
+			data.hostIds = [];
+			var idsArray = ids.split(",");
+			$.each(idsArray, function(i, val){
+				data.hostIds.push(val);
+			});
+			data.message = text;
+			message = "消息发送";
+		} else if (opt == "addDesc"){
+			url += "desc";
+			data.hostId = ids;
+			data.desc = text;
+			message = "备注修改";
+		} else {
+			return;
+		}
+		
+		$.ajax({
+			url: url,
+			type: "post",
+			contentType: "application/json",
+			data:JSON.stringify(data),
+			success: function(ret){
+				// $.messager.alert("消息", message+"成功");
+				$('#myModal').modal("hide");
+			},
+			error: function(ret){
+				$.messager.alert("消息", message+"失败");
+			}
+		});
+	});
 })
 
 function osLogout(row) {
-	if(row){
-		var host = hostGrid.getRowData(row.id);
-		alert("host = " + JSON.stringify(host));
-	} else {
-		alert(hostGrid.getSelectedRowsCount());
-	}
+	doOsOpertaion(row, "注销");
 }
 
 function osShutdown(row) {
-	alert("osShutdown");
+	doOsOpertaion(row, "关闭");
 }
 
 function osReboot(row) {
-	alert("osReboot");
+	doOsOpertaion(row, "重启");
+}
+
+function doOsOpertaion(row, opt){
+	var hostIds = getselectHostIds(row);
+	if (hostIds.length == 0){
+		$.messager.alert("提示", "请选择要操作的主机");
+		return;
+	}
+	$.messager.confirm("确认", "确定要"+ opt + "所选机器吗？", function() { 
+		var url = contextPath+"/rest/hosts/";
+		if (opt == "注销"){
+			url += "logoff";
+		} else if (opt == "关闭"){
+			url += "shutdown";
+		} else if (opt == "重启"){
+			url += "reboot";
+		} else {
+			return
+		}
+		
+		$.ajax({
+			url: url,
+			type: "post",
+			contentType: "application/json",
+			data:JSON.stringify(hostIds),
+			success: function(ret){
+				$.messager.alert("消息", "主机"+opt+"成功");
+				hostGrid.reload();
+			},
+			error: function(ret){
+				$.messager.alert("消息", "主机"+opt+"失败");
+			}
+		});
+    });
 }
 
 function sendMsg(row) {
-	debugger;
+	var hostIds = getselectHostIds(row);
+	if (hostIds.length == 0){
+		$.messager.alert("提示", "请选择要操作的主机");
+		return;
+	}
+	
 	$("#myModal #myModalLabel").text("给主机发送消息"); 
 	$("#myModal #btn_action").html("发送"); 
 	$("#myModal #text").attr("placeholder","长度不超过200字");
+	$("#myModal #text").val("");
+	$("#myModal #ids").val(hostIds); 
+	$("#myModal #opt").val("sendMsg"); 
 	
-    $('#myModal').modal({keyboard:false,show:true})
-}
-
-function addHosts(row) {
-	alert("addHosts");
+    $('#myModal').modal({keyboard:false,show:true});
 }
 
 function addHostDesc(row) {
-	$("#myModal #myModalLabel").text("为主机添加描述信息"); 
-	$("#myModal #btn_action").html("添加"); 
-	$("#myModal #text").attr("placeholder","长度不超过500字");
+	var host = hostGrid.getRowData(row.id);
 	
-    $('#myModal').modal({keyboard:false,show:true})
+	$("#myModal #myModalLabel").text("修改主机描述信息"); 
+	$("#myModal #btn_action").html("保存"); 
+	$("#myModal #text").attr("placeholder","长度不超过500字");
+	$("#myModal #text").val(host.desc);
+	$("#myModal #ids").val(row.id); 
+	$("#myModal #opt").val("addDesc"); 
+	
+    $('#myModal').modal({keyboard:false,show:true});
+}
+
+function addHosts() {
+	$("#addHostsModal #addHostsModalLabel").text("添加主机"); 
+	
+    $('#addHostsModal').modal({keyboard:false,show:true});
+}
+
+function getselectHostIds(row){
+	var hostIds = [];
+	if(row){
+		hostIds.push(row.id);
+	} else {
+		var selectdHosts = hostGrid.getSelectedRows();
+		$.each(selectdHosts, function(i,val){
+			hostIds.push(val.hostId);
+		})
+	}
+	return hostIds;
 }

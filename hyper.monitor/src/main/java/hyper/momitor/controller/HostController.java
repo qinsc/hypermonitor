@@ -28,6 +28,7 @@ import hyper.momitor.util.ModelHelper;
 import hyper.momitor.util.SpringUtil;
 import hyper.momitor.vo.HostDetailInfo;
 import hyper.momitor.vo.HostInfo;
+import hyper.momitor.vo.HostsMessage;
 
 /**
  * @author qinscx
@@ -118,8 +119,15 @@ public class HostController {
 	@Path("/message")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void sendMessage(List<HostInfo> hosts) throws HMException {
-		log.info("send message to hosts: " + hosts);
-		hostClient.sendMessage(hosts);
+	public void sendMessage(HostsMessage hostsMessage) throws HMException {
+		log.info("send message to hosts: " + hostsMessage);
+//		hostClient.sendMessage(hostsMessage);
+	}
+	
+	@Path("/desc")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void updateHostDesc(Host host) throws HMException {
+		log.info("update host desc: " + host);
 	}
 }

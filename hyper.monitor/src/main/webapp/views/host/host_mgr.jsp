@@ -12,7 +12,8 @@
 					<h4 class="modal-title" id="myModalLabel"></h4>
 				</div>
 				<div class="modal-body">
-					<input type="hidden" name="Ids" id="Ids" >
+					<input type="hidden" id="ids" >
+					<input type="hidden" id="opt" >
 					<textarea id="text" class="form-control" style="height: 300px;" maxlength="200" placeholder="最多200字"></textarea>
 				</div>
 				<div class="modal-footer">
@@ -51,12 +52,15 @@
 	</div>
 </div>
 
+<%@include file="host_add.jsp"%>
+
 <script src="<%=contextPath%>/assets/js/dt.js"></script> 
 <script src="<%=contextPath%>/views/host/js/host_mgr.js"></script>
 <script type="text/javascript">
 	$(function() {
 		var contextPath = "<%=contextPath%>";
 		initHostDatatables(contextPath, "hostTable"); 
+		initAddHostDatatables("addHostTable");
 	})
 </script>
 
