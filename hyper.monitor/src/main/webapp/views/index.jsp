@@ -7,7 +7,6 @@
 	target = (null == target || 0 == target.trim().length()) ? "/views/dashboard/dashboard.jsp" : "/views/" + target;
 %>
 
-
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,29 +24,29 @@
 	<link href="../assets/css/buttons.dataTables.min.css rel="stylesheet" />
 	
 	<%@include file="common/common.jsp"%>
+	
 </head>
 
-<body class="page-container-bg-solid page-sidebar-closed-hide-logo">
-	<div id="wrapper" class="page-container">
+<body>
+	<div id="wrapper">
 		<%@include file="/views/common/header.jsp"%>
 		<%@include file="/views/common/menu.jsp"%>
 		
-		<div id="page-wrapper" class="page-content-wrapper">
-			<div class="page-content">
-				<div id="page-inner"  class="page-content-body">
-					<jsp:include page="<%=target %>" flush="true" />
-				</div>
+		<div id="page-wrapper">
+			<div id="page-inner">
+				<jsp:include page="<%=target %>" flush="true" />
 			</div>
 		</div>
 	</div>
 	
 	<script src="../assets/js/jquery.js"></script>
+	<script src="../assets/js/jquery.uniform.js"></script>
 	<script src="../assets/js/bootstrap.min.js"></script>
-	<script src="../assets/js/custom-scripts.js"></script>
 	<script src="../assets/js/dataTables/jquery.dataTables.min.js"></script>
 	<script src="../assets/js/dataTables/dataTables.bootstrap.min.js"></script>
 	<script src="../assets/js/dataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
 	<script src="../assets/js/dataTables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
+	<script src="../assets/js/custom-scripts.js"></script>
 </body>
 
 </html>

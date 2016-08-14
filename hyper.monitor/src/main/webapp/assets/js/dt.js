@@ -1,4 +1,4 @@
-var DT = function() {
+var Datatable = function() {
     var tableOptions; // main options
     var dataTable; // datatable object
     var table; // actual table jquery object
@@ -10,8 +10,8 @@ var DT = function() {
 
     var countSelectedRecords = function() {
         var selected = $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
-        if (selected > 0 && text) {
-            $('.table-group-actions > span', tableWrapper).text(text.replace("_TOTAL_", selected));
+        if (selected > 0) {
+            $('.table-group-actions > span', tableWrapper).text(selected);
         } else {
             $('.table-group-actions > span', tableWrapper).text("");
         }
@@ -36,7 +36,6 @@ var DT = function() {
                 filterCancelAction: "filter_cancel",
                 resetGroupActionInputOnSuccess: true,
                 idField:"id",//用来取值时获得
-                loadingMessage: 'Loading...',
                 dataTable: {
                 	"dom": "<'row'<'col-md-8 col-sm-12 '<'table-group-actions '>><'col-md-4 col-sm-12 pull-right'f>r><'table-scrollable't><'row'<'col-md-8 col-sm-12'i><'col-md-4 col-sm-12'p>>",
                     "pageLength": 10, // default records per page
@@ -136,7 +135,8 @@ var DT = function() {
                     }
                 }
             }, options);
-
+            
+            
             tableOptions = options;
 
             // create table's jquery object
@@ -171,7 +171,7 @@ var DT = function() {
                 var set = $('tbody > tr > td:nth-child(1) input[type="checkbox"]', table);
                 var checked = $(this).is(":checked");
                 $(set).each(function() {
-                    $(this).attr("checked", checked);
+                    $(this).prop("checked", checked);
                 });
                 $.uniform.update(set);
                 countSelectedRecords();
@@ -181,7 +181,7 @@ var DT = function() {
             table.on('change', 'tbody > tr > td:nth-child(1) input[type="checkbox"]', function() {
             	var checked = $(this).is(":checked");
             	if(!checked){
-            		$('.group-checkable', table).attr("checked", checked)
+            		$('.group-checkable', table).prop("checked", checked)
             	}
             	$.uniform.update($('.group-checkable', table));
                 countSelectedRecords();
@@ -199,16 +199,15 @@ var DT = function() {
                 the.resetFilter();
             });
             
-            
             var _html = $(".dataTables_filter",tableWrapper);
             var searchBox = $(".form-control",_html);
             searchBox.attr("placeholder","筛选");
-            var searchImg = '<span class="input-group-addon"><i class="fa fa-search"></i></span>';
+            var searchImg = '<span class="input-group-addon"><i class="fa fa-search" style="float: right;"></i></span>';
             _html.addClass("input-group");
             _html.append(searchBox);
             _html.append(searchImg);
+            _html.css("float","right");
             $("label",_html).remove();
-            
         },
 
         submitFilter: function() {
