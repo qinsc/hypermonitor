@@ -8,14 +8,14 @@ var Datatable = function() {
     var ajaxParams = {}; // set filter mode
     var the;
 
-    var countSelectedRecords = function() {
-        var selected = $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
-        if (selected > 0) {
-            $('.table-group-actions > span', tableWrapper).text(selected);
-        } else {
-            $('.table-group-actions > span', tableWrapper).text("");
-        }
-    };
+//    var countSelectedRecords = function() {
+//        var selected = $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
+//        if (selected > 0) {
+//            $('.table-group-actions > span', tableWrapper).text(selected);
+//        } else {
+//            $('.table-group-actions > span', tableWrapper).text("");
+//        }
+//    };
 
     return {
 
@@ -50,7 +50,7 @@ var Datatable = function() {
                     	"sSearch":       "搜索:",
                     	"sUrl":          "",
                     	"sEmptyTable":     "表中数据为空",
-                    	"sLoadingRecords": "载入中...",
+                    	"sLoadingRecords": "",
                     	"sInfoThousands":  ",",
                     	"oPaginate": {
                     		"sFirst":    "首页",
@@ -126,7 +126,7 @@ var Datatable = function() {
                             tableInitialized = true; // set table initialized
                             table.show(); // display table
                         }
-                        countSelectedRecords(); // reset selected records indicator
+//                        countSelectedRecords(); // reset selected records indicator
 
                         // callback for ajax data load
                         if (tableOptions.onDataLoad) {
@@ -174,7 +174,7 @@ var Datatable = function() {
                     $(this).prop("checked", checked);
                 });
                 $.uniform.update(set);
-                countSelectedRecords();
+//                countSelectedRecords();
             });
 
             // handle row's checkbox click
@@ -184,7 +184,7 @@ var Datatable = function() {
             		$('.group-checkable', table).prop("checked", checked)
             	}
             	$.uniform.update($('.group-checkable', table));
-                countSelectedRecords();
+//                countSelectedRecords();
             });
 
             // handle filter submit button click
@@ -260,8 +260,8 @@ var Datatable = function() {
                 		}
                 	}
                 }
-
             }
+            
             $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).each(function() {
             	if($(this).val() && rowDataMap[$(this).val()]){
             		rows.push(rowDataMap[$(this).val()]);

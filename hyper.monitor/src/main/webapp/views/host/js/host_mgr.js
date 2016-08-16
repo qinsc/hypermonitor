@@ -70,7 +70,9 @@ function initHostDatatables(ctxPath, tableId){
                  {"data" : "online", "render" : function(data, type, full, meta) {
                 	 return data == 1?'<h style="color:green;">在线<h>':'<h style="color: red;">离线<h>';
         		 }},  
-                 {"data" : "hostName"},  
+                 {"data" : "hostName","render" : function(data, type, full, meta) {
+                	 return '<a id="'+full.hostId+'" href="#" onclick="toShowHostDetail(this)">'+data+'</a>';
+        		 }},
                  {"data" : "manageIp"},  
                  {"data" : "os", "orderable": false},  
                  {"data" : "desc", "orderable": false},  
@@ -91,6 +93,7 @@ function initAddHostDatatables(tableId){
 //            	 url:contextPath+"/rest/hosts/",
 //            	 type:"GET"
 //             }, 
+        	 "processing": false,
              "pageLength": 5,
              "columns":[
                  {"data":"check"},
@@ -100,58 +103,6 @@ function initAddHostDatatables(tableId){
         }
     });
 }
-
-$(document).delegate(".btn.btn-primary","click",function(){
-	var opt = $("#myModal #opt").val();
-	var optMsg = "";
-	if (opt == "sendMsg"){
-		optMsg = "发送此消息";
-	} else {
-		optMsg = "修改此备注";
-	}
-	
-	$.messager.confirm("确认", "确定要"+ optMsg+"吗?", function() { 
-		var ids = $("#myModal #ids").val(); 
-		var opt = $("#myModal #opt").val(); 
-		var text = $("#myModal #text").val();
-		
-		debugger;
-		var url = contextPath+"/rest/hosts/";
-		var data = {};
-		var message = "";
-		if (opt == "sendMsg"){
-			url += "message";
-			data.hostIds = [];
-			var idsArray = ids.split(",");
-			$.each(idsArray, function(i, val){
-				data.hostIds.push(val);
-			});
-			data.message = text;
-			message = "消息发送";
-		} else if (opt == "addDesc"){
-			url += "desc";
-			data.hostId = ids;
-			data.desc = text;
-			message = "备注修改";
-		} else {
-			return;
-		}
-		
-		$.ajax({
-			url: url,
-			type: "post",
-			contentType: "application/json",
-			data:JSON.stringify(data),
-			success: function(ret){
-				// $.messager.alert("消息", message+"成功");
-				$('#myModal').modal("hide");
-			},
-			error: function(ret){
-				$.messager.alert("消息", message+"失败");
-			}
-		});
-	});
-})
 
 function osLogout(row) {
 	doOsOpertaion(row, "注销");
@@ -163,6 +114,82 @@ function osShutdown(row) {
 
 function osReboot(row) {
 	doOsOpertaion(row, "重启");
+}
+
+function toShowHostDetail(row){
+	$.ajax({
+		url: contextPath+"/rest/hosts/detail/"+row.id,
+		type: "get",
+		contentType: "application/json",
+		success: function(ret){
+			showHostDetail(ret);
+		},
+		error: function(ret){
+			$.messager.alert("消息", "获取主机详情失败");
+		}
+	});
+}
+
+function showHostDetail(detialInfo){
+	$("#detailHostsModal #detailHostsModalLabel").text("主机详情");
+	
+	$("#detailHostsModal #hostName").html(detialInfo.hostName); 
+	$("#detailHostsModal #hostDesc").html(detialInfo.desc); 
+	
+	$("#detailHostsModal #bootTime").html(getLocalTime(detialInfo.bootTime/1000)); 
+	$("#detailHostsModal #upTime").html(getDateDiff(detialInfo.upTime/1000)); 
+	
+	$("#detailHostsModal #os").html(detialInfo.os); 
+	$("#detailHostsModal #osPlatform").html(detialInfo.osPlatform); 
+	$("#detailHostsModal #osPlatformFamily").html(detialInfo.osPlatformFamily); 
+	$("#detailHostsModal #osPlatformVersion").html(detialInfo.osPlatformVersion); 
+	
+	$("#detailHostsModal #cpuCores").html(detialInfo.cpuCores); 
+	$("#detailHostsModal #cpuModelName").html(detialInfo.cpuModelName); 
+	$("#detailHostsModal #cpuMhz").html(detialInfo.cpuMhz); 
+	$("#detailHostsModal #cpuUsage").html(detialInfo.cpuUsage); 
+	
+	$("#detailHostsModal #memSize").html(detialInfo.memSize); 
+	$("#detailHostsModal #memUsed").html(detialInfo.memUsed); 
+	$("#detailHostsModal #memUsage").html(detialInfo.memUsage); 
+	
+	$("#detailHostsModal #nics").empty();
+	$("#detailHostsModal #nics").append($("<legend>网卡</legend>").get(0));  
+	$.each(detialInfo.nicInfos, function(i, val){
+		var nic = 
+			'<dl class="dl-horizontal">' +
+			'  <dt>网卡名称</dt> ' +
+			'  <dd>' + val.nicName + '</dd>'+						  
+			'  <dt>网卡IP地址</dt> ' +
+			'  <dd>' + val.ip + '</dd>'	 +			  
+			'  <dt>网卡物理地址</dt> ' +
+			'  <dd>' + val.mac + '</dd>'	 +			  
+			'</dl> ';
+		$("#detailHostsModal #nics").append($(nic).get(0));
+	});
+	
+	$("#detailHostsModal #disks").empty();
+	$("#detailHostsModal #disks").append($("<legend>硬盘</legend>").get(0));  
+	$.each(detialInfo.diskInfos, function(i, val){
+		var disk = 
+			'<dl class="dl-horizontal">' +
+			'  <dt>硬盘</dt> ' +
+			'  <dd>' + val.path + '</dd>'+						  
+			'  <dt>设备路径</dt> ' +
+			'  <dd>' + val.device + '</dd>'	 +			  
+			'  <dt>文件系统类型</dt> ' +
+			'  <dd>' + val.fsType + '</dd>'	 +			  
+			'  <dt>总大小</dt> ' +
+			'  <dd>' + val.diskSize + '</dd>'	 +			  
+			'  <dt>已使用</dt> ' +
+			'  <dd>' + val.diskUsed + '</dd>'	 +			  
+			'  <dt>使用率</dt> ' +
+			'  <dd>' + val.usedPercent + '</dd>' +			  
+			'</dl> ';
+		$("#detailHostsModal #disks").append($(disk).get(0));
+	});
+	
+    $('#detailHostsModal').modal({keyboard:false,show:true});
 }
 
 function doOsOpertaion(row, opt){
@@ -246,4 +273,128 @@ function getselectHostIds(row){
 		})
 	}
 	return hostIds;
+}
+
+function checkIp(ip){
+	return true;
+}
+
+function checkIpRange(startIp, endIp){
+	return true;
+}
+
+$(document).delegate("#myModal  #btn_action","click",function(){
+	var opt = $("#myModal #opt").val();
+	var optMsg = "";
+	if (opt == "sendMsg"){
+		optMsg = "发送此消息";
+	} else {
+		optMsg = "修改此备注";
+	}
+	
+	$.messager.confirm("确认", "确定要"+ optMsg+"吗?", function() { 
+		var ids = $("#myModal #ids").val(); 
+		var opt = $("#myModal #opt").val(); 
+		var text = $("#myModal #text").val();
+		
+		debugger;
+		var url = contextPath+"/rest/hosts/";
+		var data = {};
+		var message = "";
+		if (opt == "sendMsg"){
+			url += "message";
+			data.hostIds = [];
+			var idsArray = ids.split(",");
+			$.each(idsArray, function(i, val){
+				data.hostIds.push(val);
+			});
+			data.message = text;
+			message = "消息发送";
+		} else if (opt == "addDesc"){
+			url += "desc";
+			data.hostId = ids;
+			data.desc = text;
+			message = "备注修改";
+		} else {
+			return;
+		}
+		
+		$.ajax({
+			url: url,
+			type: "post",
+			contentType: "application/json",
+			data:JSON.stringify(data),
+			success: function(ret){
+				// $.messager.alert("消息", message+"成功");
+				$('#myModal').modal("hide");
+			},
+			error: function(ret){
+				$.messager.alert("消息", message+"失败");
+			}
+		});
+	});
+});
+
+$(document).delegate("#addHostsModal  #btn_scan","click",function(){
+	var startIp = $("#addHostsModal #startIp").val();
+	var endIp = $("#addHostsModal #endIp").val();
+	if (checkIpRange(startIp, endIp)){
+		addHostGrid.reload(contextPath+"/rest/hosts/scan/"+startIp+"/"+endIp);
+	}
+});
+
+$(document).delegate("#addHostsModal #btn_add_hosts","click",function(){
+	var selectedHosts = addHostGrid.getSelectedRows();
+	if (selectedHosts.length == 0){
+		$.messager.alert("消息", "请选择需要添加的主机");
+		return
+	}
+	
+	var hosts = [];
+	$.each(selectedHosts,function(i,val){
+		hosts.push({hostId: val.hostId, manageIp: val.manageIp, hostName: val.hostName});
+	});
+	$.ajax({
+		url: contextPath+"/rest/hosts",
+		type: "put",
+		contentType: "application/json",
+		data:JSON.stringify(hosts),
+		success: function(ret){
+			// $.messager.alert("消息", message+"成功");
+			$('#addHostsModal').modal("hide");
+			hostGrid.reload();
+		},
+		error: function(ret){
+			$.messager.alert("消息", message+"失败");
+		}
+	});
+});
+
+function getLocalTime(nS) { 
+	return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' '); 
+} 
+
+
+function getDateDiff(t) {
+	var s = parseInt(t%60);
+	var m = parseInt(t/60%60);
+	var h = parseInt(t/60/60%24);
+	var d = parseInt(t/60/60/24);
+	var rs = "";
+	if (d > 0){
+		rs += (d + " 天 ");
+	}
+	if (h > 0){
+		rs += (h + " 小时 ");
+	}
+	if (m > 0){
+		rs += (m + " 分钟 ");
+	}
+	if (s > 0){
+		rs += (s + " 秒 ");
+	}
+	if (rs == ""){
+		return "1 秒";
+	}
+	return rs;
 }
