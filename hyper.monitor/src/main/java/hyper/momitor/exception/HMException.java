@@ -1,8 +1,8 @@
 package hyper.momitor.exception;
 
 public class HMException extends Exception{
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = -5194657821641636776L;
+
 	/**
 	 * @param message
 	 * @param cause
