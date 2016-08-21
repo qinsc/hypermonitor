@@ -53,6 +53,7 @@
 </div>
 
 <%@include file="host_add.jsp"%>
+<%@include file="host_detail.jsp"%>
 
 <script src="<%=contextPath%>/assets/js/dt.js"></script> 
 <script src="<%=contextPath%>/views/host/js/host_mgr.js"></script>

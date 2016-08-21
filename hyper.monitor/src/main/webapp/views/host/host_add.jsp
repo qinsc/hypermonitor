@@ -1,5 +1,4 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<link rel="stylesheet" type="text/css" href="assets/css/signin.css" />
 
 <div class="row">
 	<div class="modal fade" id="addHostsModal" tabindex="-1" role="dialog"
@@ -12,24 +11,21 @@
 					<h4 class="modal-title" id="addHostsModalLabel"></h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-signin" method="post" id="scanHosts"
-						action="<%=contextPath%>/rest/hosts/scan">
-						<div class="row">
-							<div class="col-lg-9" style="padding-left: 0px; padding-right: 4px;">
-								<div>
-									<label for="startIP" class="sr-only">起始地址</label>
-									<input type="text" id="startIP" name="startIP" class="form-control" placeholder="起始地址" required autofocus>
-								</div>
-								<div style="margin-top: 4px;">
-									<label for="endIP" class="sr-only">起始地址</label>
-									<input type="text" id="endIP" name="endIP" class="form-control" placeholder="结束地址" required autofocus>	
-								</div>
+					<div class="row">
+						<div class="col-lg-9 col-md-9 col-xs-9" style="padding-left: 0px; padding-right: 4px;">
+							<div>
+								<label for="startIp" class="sr-only">起始地址</label>
+								<input type="text" id="startIp" name="startIp" class="form-control" placeholder="起始地址" required autofocus>
 							</div>
-							<div class="col-lg-3"  style="height: 72px; padding-right: 2px; padding-left: 4px;">
-								<button class="btn btn-primary btn-block"  style="height: 68px;" type="button" onclick="hostScan()">扫 描</button>
+							<div style="margin-top: 4px;">
+								<label for="endIp" class="sr-only">起始地址</label>
+								<input type="text" id="endIp" name="endIp" class="form-control" placeholder="结束地址" required autofocus>	
 							</div>
 						</div>
-					</form>
+						<div class="col-lg-3 col-md-3 col-xs-3"  style="height: 72px; padding-right: 2px; padding-left: 4px;">
+							<button id="btn_scan" class="btn btn-primary btn-block"  style="height: 68px;" type="button">扫 描</button>
+						</div>
+					</div>
 					<div class="table-responsive" style="min-height: 400px;">
 						<table id="addHostTable"
 							class="table table-striped table-bordered table-hover">
@@ -47,7 +43,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" id="btn_action" class="btn btn-primary">添加</button>
+					<button type="button" id="btn_add_hosts" class="btn btn-primary">添加</button>
 				</div>
 			</div>
 		</div>

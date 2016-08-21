@@ -16,7 +16,6 @@ public class HostInfo {
 	private String manageIp;
 	private String os;
 	private String desc;
-	private String msgToSend;
 
 	public HostInfo() {
 	}
@@ -119,21 +118,6 @@ public class HostInfo {
 		this.desc = desc;
 	}
 
-	/**
-	 * @return Returns the msgToSend.
-	 */
-	public String getMsgToSend() {
-		return msgToSend;
-	}
-
-	/**
-	 * @param msgToSend
-	 *            The msgToSend to set.
-	 */
-	public void setMsgToSend(String msgToSend) {
-		this.msgToSend = msgToSend;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -144,8 +128,7 @@ public class HostInfo {
 		return "HostInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "") + "online=" + online + ", "
 				+ (hostName != null ? "hostName=" + hostName + ", " : "")
 				+ (manageIp != null ? "manageIp=" + manageIp + ", " : "") + (os != null ? "os=" + os + ", " : "")
-				+ (desc != null ? "desc=" + desc + ", " : "") + (msgToSend != null ? "msgToSend=" + msgToSend : "")
-				+ "]";
+				+ (desc != null ? "desc=" + desc + ", " : "") + "]";
 	}
 
 }

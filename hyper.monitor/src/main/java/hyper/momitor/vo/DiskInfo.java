@@ -7,16 +7,14 @@ package hyper.momitor.vo;
  * @author qinscx
  *
  */
-public class DisklInfo {
+public class DiskInfo {
 	private String diskId;
 	private String device;
 	private String path;
 	private String fsType;
-	private String opts;
-
+	private long diskSize;
+	private long diskUsed;
 	private int usedPercent;
-	private long inodesTotal;
-	private int inodesUsedPercent;
 
 	/**
 	 * @return the diskId
@@ -79,21 +77,6 @@ public class DisklInfo {
 	}
 
 	/**
-	 * @return the opts
-	 */
-	public String getOpts() {
-		return opts;
-	}
-
-	/**
-	 * @param opts
-	 *            the opts to set
-	 */
-	public void setOpts(String opts) {
-		this.opts = opts;
-	}
-
-	/**
 	 * @return the usedPercent
 	 */
 	public int getUsedPercent() {
@@ -109,33 +92,33 @@ public class DisklInfo {
 	}
 
 	/**
-	 * @return the inodesTotal
+	 * @return the diskSize
 	 */
-	public long getInodesTotal() {
-		return inodesTotal;
+	public long getDiskSize() {
+		return diskSize;
 	}
 
 	/**
-	 * @param inodesTotal
-	 *            the inodesTotal to set
+	 * @param diskSize
+	 *            the diskSize to set
 	 */
-	public void setInodesTotal(long inodesTotal) {
-		this.inodesTotal = inodesTotal;
+	public void setDiskSize(long diskSize) {
+		this.diskSize = diskSize;
 	}
 
 	/**
-	 * @return the inodesUsedPercent
+	 * @return the diskUsed
 	 */
-	public int getInodesUsedPercent() {
-		return inodesUsedPercent;
+	public long getDiskUsed() {
+		return diskUsed;
 	}
 
 	/**
-	 * @param inodesUsedPercent
-	 *            the inodesUsedPercent to set
+	 * @param diskUsed
+	 *            the diskUsed to set
 	 */
-	public void setInodesUsedPercent(int inodesUsedPercent) {
-		this.inodesUsedPercent = inodesUsedPercent;
+	public void setDiskUsed(long diskUsed) {
+		this.diskUsed = diskUsed;
 	}
 
 	/*
@@ -145,11 +128,10 @@ public class DisklInfo {
 	 */
 	@Override
 	public String toString() {
-		return "DiskDetailInfo [" + (diskId != null ? "diskId=" + diskId + ", " : "")
+		return "DiskInfo [" + (diskId != null ? "diskId=" + diskId + ", " : "")
 				+ (device != null ? "device=" + device + ", " : "") + (path != null ? "path=" + path + ", " : "")
-				+ (fsType != null ? "fsType=" + fsType + ", " : "") + (opts != null ? "opts=" + opts + ", " : "")
-				+ "usedPercent=" + usedPercent + ", inodesTotal=" + inodesTotal + ", inodesUsedPercent="
-				+ inodesUsedPercent + "]";
+				+ (fsType != null ? "fsType=" + fsType + ", " : "") + "diskSize=" + diskSize + ", diskUsed=" + diskUsed
+				+ ", usedPercent=" + usedPercent + "]";
 	}
 
 }

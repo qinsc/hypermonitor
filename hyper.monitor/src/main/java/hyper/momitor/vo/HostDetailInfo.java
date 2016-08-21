@@ -3,6 +3,7 @@
  */
 package hyper.momitor.vo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import hyper.momitor.model.Host;
 public class HostDetailInfo {
 	private String hostId;
 	private String hostName;
+	private String desc;
 
 	private int online; // 0 为离线，1为在线
 	private Date bootTime;
@@ -30,14 +32,12 @@ public class HostDetailInfo {
 	private int cpuMhz;
 	private int cpuUsage;
 
-	private int memSize;
+	private long memSize;
+	private long memUsed;
 	private int memUsage;
-	private HostGroupInfo hostGroup;
 
-	private List<NicInfo> nicInfos;
-	private List<DisklInfo> diskInfos;
-	private List<TagInfo> hostTags;
-	private String manageIp;
+	private List<NicInfo> nicInfos = new ArrayList<>();
+	private List<DiskInfo> diskInfos = new ArrayList<>();
 
 	public HostDetailInfo() {
 	}
@@ -45,6 +45,7 @@ public class HostDetailInfo {
 	public HostDetailInfo(Host host) {
 		this.hostId = host.getHostId();
 		this.os = host.getOs();
+		this.desc = host.getDesc();
 		this.osPlatform = host.getOsPlatform();
 		this.osPlatformFamily = host.getOsPlatformFamily();
 		this.osPlatformVersion = host.getOsPlatformVersion();
@@ -82,6 +83,21 @@ public class HostDetailInfo {
 	 */
 	public void setHostName(String hostName) {
 		this.hostName = hostName;
+	}
+
+	/**
+	 * @return the desc
+	 */
+	public String getDesc() {
+		return desc;
+	}
+
+	/**
+	 * @param desc
+	 *            the desc to set
+	 */
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	/**
@@ -252,7 +268,7 @@ public class HostDetailInfo {
 	/**
 	 * @return the memSize
 	 */
-	public int getMemSize() {
+	public long getMemSize() {
 		return memSize;
 	}
 
@@ -260,8 +276,23 @@ public class HostDetailInfo {
 	 * @param memSize
 	 *            the memSize to set
 	 */
-	public void setMemSize(int memSize) {
+	public void setMemSize(long memSize) {
 		this.memSize = memSize;
+	}
+
+	/**
+	 * @return the memUsed
+	 */
+	public long getMemUsed() {
+		return memUsed;
+	}
+
+	/**
+	 * @param memUsed
+	 *            the memUsed to set
+	 */
+	public void setMemUsed(long memUsed) {
+		this.memUsed = memUsed;
 	}
 
 	/**
@@ -277,21 +308,6 @@ public class HostDetailInfo {
 	 */
 	public void setMemUsage(int memUsage) {
 		this.memUsage = memUsage;
-	}
-
-	/**
-	 * @return the hostGroup
-	 */
-	public HostGroupInfo getHostGroup() {
-		return hostGroup;
-	}
-
-	/**
-	 * @param hostGroup
-	 *            the hostGroup to set
-	 */
-	public void setHostGroup(HostGroupInfo hostGroup) {
-		this.hostGroup = hostGroup;
 	}
 
 	/**
@@ -312,7 +328,7 @@ public class HostDetailInfo {
 	/**
 	 * @return the diskInfos
 	 */
-	public List<DisklInfo> getDiskInfos() {
+	public List<DiskInfo> getDiskInfos() {
 		return diskInfos;
 	}
 
@@ -320,38 +336,8 @@ public class HostDetailInfo {
 	 * @param diskInfos
 	 *            the diskInfos to set
 	 */
-	public void setDiskInfos(List<DisklInfo> diskInfos) {
+	public void setDiskInfos(List<DiskInfo> diskInfos) {
 		this.diskInfos = diskInfos;
-	}
-
-	/**
-	 * @return the hostTags
-	 */
-	public List<TagInfo> getHostTags() {
-		return hostTags;
-	}
-
-	/**
-	 * @param hostTags
-	 *            the hostTags to set
-	 */
-	public void setHostTags(List<TagInfo> hostTags) {
-		this.hostTags = hostTags;
-	}
-
-	/**
-	 * @return the manageIp
-	 */
-	public String getManageIp() {
-		return manageIp;
-	}
-
-	/**
-	 * @param manageIp
-	 *            the manageIp to set
-	 */
-	public void setManageIp(String manageIp) {
-		this.manageIp = manageIp;
 	}
 
 	/*
@@ -361,15 +347,17 @@ public class HostDetailInfo {
 	 */
 	@Override
 	public String toString() {
-		return "HostDetailInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "") + (hostName != null ? "hostName=" + hostName + ", " : "")
-				+ (bootTime != null ? "bootTime=" + bootTime + ", " : "") + "upTime=" + upTime + ", " + (os != null ? "os=" + os + ", " : "")
+		return "HostDetailInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "")
+				+ (hostName != null ? "hostName=" + hostName + ", " : "") + (desc != null ? "desc=" + desc + ", " : "")
+				+ "online=" + online + ", " + (bootTime != null ? "bootTime=" + bootTime + ", " : "") + "upTime="
+				+ upTime + ", " + (os != null ? "os=" + os + ", " : "")
 				+ (osPlatform != null ? "osPlatform=" + osPlatform + ", " : "")
 				+ (osPlatformFamily != null ? "osPlatformFamily=" + osPlatformFamily + ", " : "")
-				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores=" + cpuCores + ", "
-				+ (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz=" + cpuMhz + ", cpuUsage=" + cpuUsage + ", memSize=" + memSize
-				+ ", memUsage=" + memUsage + ", " + (hostGroup != null ? "hostGroup=" + hostGroup + ", " : "")
-				+ (nicInfos != null ? "nicInfos=" + nicInfos + ", " : "") + (diskInfos != null ? "diskInfos=" + diskInfos + ", " : "")
-				+ (hostTags != null ? "hostTags=" + hostTags + ", " : "") + (manageIp != null ? "manageIp=" + manageIp : "") + "]";
+				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores="
+				+ cpuCores + ", " + (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz="
+				+ cpuMhz + ", cpuUsage=" + cpuUsage + ", memSize=" + memSize + ", memUsed=" + memUsed + ", memUsage="
+				+ memUsage + ", " + (nicInfos != null ? "nicInfos=" + nicInfos + ", " : "")
+				+ (diskInfos != null ? "diskInfos=" + diskInfos : "") + "]";
 	}
 
 }
