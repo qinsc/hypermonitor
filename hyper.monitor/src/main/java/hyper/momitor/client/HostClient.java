@@ -6,32 +6,29 @@ package hyper.momitor.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 import hyper.momitor.exception.HMException;
-import hyper.momitor.model.Host;
+import hyper.momitor.util.MonitorUtil;
+import hyper.momitor.util.RestUtil;
+import hyper.momitor.vo.HostConfig;
 import hyper.momitor.vo.HostDetailInfo;
 import hyper.momitor.vo.HostInfo;
+import hyper.momitor.vo.HostMonitor;
 
 /**
  * @author qinscx
  *
  */
 public class HostClient {
-	private EtcdClient etcdClient = new EtcdClient();
+	private ObjectMapper objectMapper = new ObjectMapper();
 	
-	public HostDetailInfo getHostDetailInfo(Host host) throws HMException {
-		HostInfo hostInfo = etcdClient.getHostInfo(host);
-		if (hostInfo == null) {
-			HostDetailInfo detailInfo = new HostDetailInfo(host);
-			detailInfo.setOnline(0);
-			return detailInfo;
-		} 
-		
-		HostDetailInfo detailInfo = getHostDetailInfo(host.getManageIp());
-		if (detailInfo == null) {
-			detailInfo = new HostDetailInfo(host);
-		} else {
-			detailInfo.setOnline(1);
-		}
+	public HostClient(){
+		// objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	}
+	
+	public HostDetailInfo getHostDetailInfo(HostInfo hostInfo) throws HMException {
+		HostDetailInfo detailInfo = getHostDetailInfo(hostInfo.getManageIp());
 		return detailInfo;
 	}
 	
@@ -49,27 +46,91 @@ public class HostClient {
 		return detailInfos;
 	}
 	
-	public void osLogout(List<HostInfo> hosts) throws HMException {
-		
+	public void osLogoff(String manageId) throws HMException {
+		String url = "http://" + manageId + ":8080/rest/host/logoff";
+		try {
+			RestUtil.doPost(url, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void osShutdown(List<HostInfo> hosts) throws HMException {
-		
+	public void osShutdown(String manageId) throws HMException {
+		String url = "http://" + manageId + ":8080/rest/host/shutdown";
+		try {
+			RestUtil.doPost(url, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void sendMessage(List<HostInfo> hosts) throws HMException {
-		
+	public void osReboot(String manageId) throws HMException {
+		String url = "http://" + manageId + ":8080/rest/host/reboot";
+		try {
+			RestUtil.doPost(url, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	private HostDetailInfo getHostDetailInfo(String manageId) {
-		// TODO
+	public void sendMessage(String manageId, String message) throws HMException {
+		String url = "http://" + manageId + ":8080/rest/host/message";
+		try {
+			RestUtil.doPost(url, message, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public HostDetailInfo getHostDetailInfo(String manageId) {
+		String url = "http://" + manageId + ":8080/rest/host/info";
+		try {
+			String rs = RestUtil.doGet(url, null);
+			if (rs != null) {
+				return new ObjectMapper().readValue(rs, HostDetailInfo.class);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
-	private List<String> getIPs(String startIp, String endIp){
+	public HostConfig getHostConfig(String manageId) {
+		String url = "http://" + manageId + ":8080/rest/host/config";
+		try {
+			String rs = RestUtil.doGet(url, null);
+			if (rs != null) {
+				return objectMapper.readValue(rs, HostConfig.class);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<String> getIPs(String startIp, String endIp){
 		List<String> ips = new ArrayList<>();
-		// TODO 
+		
+		ips.add("192.168.88.100");
+		
 		return ips;
+	}
+	
+	public HostDetailInfo addHost(HostInfo hostInfo) throws HMException {
+		String url = "http://" + hostInfo.getManageIp() + ":8080/rest/host/add";
+		HostMonitor monitor = MonitorUtil.getMonitor();
+		monitor.setHostId(hostInfo.getHostId());
+		
+		try {
+			String monitorJson = objectMapper.writeValueAsString(monitor);
+			String rs = RestUtil.doPost(url, monitorJson, null);
+			if (rs != null) {
+				return new ObjectMapper().readValue(rs, HostDetailInfo.class);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

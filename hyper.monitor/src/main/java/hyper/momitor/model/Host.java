@@ -17,7 +17,7 @@ public class Host implements Serializable {
 	private int cpuCores;
 	private String cpuModelName;
 	private int cpuMhz;
-	private int memSize;
+	private long memSize;
 
 	private String groupId;
 	private String manageIp;
@@ -160,7 +160,7 @@ public class Host implements Serializable {
 	/**
 	 * @return the memSize
 	 */
-	public int getMemSize() {
+	public long getMemSize() {
 		return memSize;
 	}
 
@@ -168,7 +168,7 @@ public class Host implements Serializable {
 	 * @param memSize
 	 *            the memSize to set
 	 */
-	public void setMemSize(int memSize) {
+	public void setMemSize(long memSize) {
 		this.memSize = memSize;
 	}
 

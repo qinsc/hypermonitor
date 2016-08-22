@@ -45,7 +45,7 @@ create table HM_HOST
    CPU_CORES            integer                        null,
    CPU_MODEL_NAME       varchar(100)                   null,
    CPU_MHZ              integer                        null,
-   MEM_SIZE             integer                        null,
+   MEM_SIZE             BIGINT                          null,
    constraint PK_HM_HOST primary key clustered (HOST_ID)
 );
 

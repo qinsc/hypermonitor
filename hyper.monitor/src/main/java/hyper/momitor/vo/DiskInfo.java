@@ -8,28 +8,12 @@ package hyper.momitor.vo;
  *
  */
 public class DiskInfo {
-	private String diskId;
 	private String device;
 	private String path;
 	private String fsType;
-	private long diskSize;
-	private long diskUsed;
+	private long total;
+	private long used;
 	private int usedPercent;
-
-	/**
-	 * @return the diskId
-	 */
-	public String getDiskId() {
-		return diskId;
-	}
-
-	/**
-	 * @param diskId
-	 *            the diskId to set
-	 */
-	public void setDiskId(String diskId) {
-		this.diskId = diskId;
-	}
 
 	/**
 	 * @return the device
@@ -77,6 +61,36 @@ public class DiskInfo {
 	}
 
 	/**
+	 * @return the total
+	 */
+	public long getTotal() {
+		return total;
+	}
+
+	/**
+	 * @param total
+	 *            the total to set
+	 */
+	public void setTotal(long total) {
+		this.total = total;
+	}
+
+	/**
+	 * @return the used
+	 */
+	public long getUsed() {
+		return used;
+	}
+
+	/**
+	 * @param used
+	 *            the used to set
+	 */
+	public void setUsed(long used) {
+		this.used = used;
+	}
+
+	/**
 	 * @return the usedPercent
 	 */
 	public int getUsedPercent() {
@@ -91,36 +105,6 @@ public class DiskInfo {
 		this.usedPercent = usedPercent;
 	}
 
-	/**
-	 * @return the diskSize
-	 */
-	public long getDiskSize() {
-		return diskSize;
-	}
-
-	/**
-	 * @param diskSize
-	 *            the diskSize to set
-	 */
-	public void setDiskSize(long diskSize) {
-		this.diskSize = diskSize;
-	}
-
-	/**
-	 * @return the diskUsed
-	 */
-	public long getDiskUsed() {
-		return diskUsed;
-	}
-
-	/**
-	 * @param diskUsed
-	 *            the diskUsed to set
-	 */
-	public void setDiskUsed(long diskUsed) {
-		this.diskUsed = diskUsed;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -128,10 +112,9 @@ public class DiskInfo {
 	 */
 	@Override
 	public String toString() {
-		return "DiskInfo [" + (diskId != null ? "diskId=" + diskId + ", " : "")
-				+ (device != null ? "device=" + device + ", " : "") + (path != null ? "path=" + path + ", " : "")
-				+ (fsType != null ? "fsType=" + fsType + ", " : "") + "diskSize=" + diskSize + ", diskUsed=" + diskUsed
-				+ ", usedPercent=" + usedPercent + "]";
+		return "DiskInfo [" + (device != null ? "device=" + device + ", " : "")
+				+ (path != null ? "path=" + path + ", " : "") + (fsType != null ? "fsType=" + fsType + ", " : "")
+				+ "total=" + total + ", used=" + used + ", usedPercent=" + usedPercent + "]";
 	}
 
 }

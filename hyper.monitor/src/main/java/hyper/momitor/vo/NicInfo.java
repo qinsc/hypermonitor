@@ -3,44 +3,30 @@
  */
 package hyper.momitor.vo;
 
+import java.util.Arrays;
+
 /**
  * @author qinscx
  *
  */
 public class NicInfo {
-	private String nicId;
-	private String nicName;
+	private String name;
 	private String mac;
-	private String ip;
+	private String[] ips;
 
 	/**
-	 * @return the nicId
+	 * @return the name
 	 */
-	public String getNicId() {
-		return nicId;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param nicId
-	 *            the nicId to set
+	 * @param name
+	 *            the name to set
 	 */
-	public void setNicId(String nicId) {
-		this.nicId = nicId;
-	}
-
-	/**
-	 * @return the nicName
-	 */
-	public String getNicName() {
-		return nicName;
-	}
-
-	/**
-	 * @param nicName
-	 *            the nicName to set
-	 */
-	public void setNicName(String nicName) {
-		this.nicName = nicName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -59,18 +45,18 @@ public class NicInfo {
 	}
 
 	/**
-	 * @return the ip
+	 * @return the ips
 	 */
-	public String getIp() {
-		return ip;
+	public String[] getIps() {
+		return ips;
 	}
 
 	/**
-	 * @param ip
-	 *            the ip to set
+	 * @param ips
+	 *            the ips to set
 	 */
-	public void setIp(String ip) {
-		this.ip = ip;
+	public void setIps(String[] ips) {
+		this.ips = ips;
 	}
 
 	/*
@@ -80,9 +66,8 @@ public class NicInfo {
 	 */
 	@Override
 	public String toString() {
-		return "NicInfo [" + (nicId != null ? "nicId=" + nicId + ", " : "")
-				+ (nicName != null ? "nicName=" + nicName + ", " : "") + (mac != null ? "mac=" + mac + ", " : "")
-				+ (ip != null ? "ip=" + ip : "") + "]";
+		return "NicInfo [" + (name != null ? "name=" + name + ", " : "") + (mac != null ? "mac=" + mac + ", " : "")
+				+ (ips != null ? "ips=" + Arrays.toString(ips) : "") + "]";
 	}
 
 }

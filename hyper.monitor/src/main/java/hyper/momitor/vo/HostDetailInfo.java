@@ -4,7 +4,6 @@
 package hyper.momitor.vo;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import hyper.momitor.model.Host;
@@ -17,9 +16,9 @@ public class HostDetailInfo {
 	private String hostId;
 	private String hostName;
 	private String desc;
+	private String manageIp;
 
-	private int online; // 0 为离线，1为在线
-	private Date bootTime;
+	private long bootTime;
 	private long upTime;
 
 	private String os;
@@ -101,24 +100,24 @@ public class HostDetailInfo {
 	}
 
 	/**
-	 * @return the online
+	 * @return the manageIp
 	 */
-	public int getOnline() {
-		return online;
+	public String getManageIp() {
+		return manageIp;
 	}
 
 	/**
-	 * @param online
-	 *            the online to set
+	 * @param manageIp
+	 *            the manageIp to set
 	 */
-	public void setOnline(int online) {
-		this.online = online;
+	public void setManageIp(String manageIp) {
+		this.manageIp = manageIp;
 	}
 
 	/**
 	 * @return the bootTime
 	 */
-	public Date getBootTime() {
+	public long getBootTime() {
 		return bootTime;
 	}
 
@@ -126,7 +125,7 @@ public class HostDetailInfo {
 	 * @param bootTime
 	 *            the bootTime to set
 	 */
-	public void setBootTime(Date bootTime) {
+	public void setBootTime(long bootTime) {
 		this.bootTime = bootTime;
 	}
 
@@ -349,8 +348,7 @@ public class HostDetailInfo {
 	public String toString() {
 		return "HostDetailInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "")
 				+ (hostName != null ? "hostName=" + hostName + ", " : "") + (desc != null ? "desc=" + desc + ", " : "")
-				+ "online=" + online + ", " + (bootTime != null ? "bootTime=" + bootTime + ", " : "") + "upTime="
-				+ upTime + ", " + (os != null ? "os=" + os + ", " : "")
+				+ "bootTime=" + bootTime + "upTime=" + upTime + ", " + (os != null ? "os=" + os + ", " : "")
 				+ (osPlatform != null ? "osPlatform=" + osPlatform + ", " : "")
 				+ (osPlatformFamily != null ? "osPlatformFamily=" + osPlatformFamily + ", " : "")
 				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores="

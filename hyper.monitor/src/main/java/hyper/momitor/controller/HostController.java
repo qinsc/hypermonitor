@@ -4,10 +4,10 @@
 package hyper.momitor.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,8 +25,10 @@ import hyper.momitor.client.HostClient;
 import hyper.momitor.exception.HMException;
 import hyper.momitor.model.Host;
 import hyper.momitor.service.IHostService;
+import hyper.momitor.util.ModelHelper;
 import hyper.momitor.util.SpringUtil;
 import hyper.momitor.vo.DiskInfo;
+import hyper.momitor.vo.HostConfig;
 import hyper.momitor.vo.HostDetailInfo;
 import hyper.momitor.vo.HostInfo;
 import hyper.momitor.vo.HostsMessage;
@@ -52,13 +54,7 @@ public class HostController {
 
 		if (hosts != null) {
 			for (Host host : hosts) {
-				HostInfo hostInfo = etcdClient.getHostInfo(host);
-				if (hostInfo == null) {
-					hostInfo = new HostInfo(host);
-				} else {
-					hostInfo.setOnline(1);
-				}
-				hostInfos.add(hostInfo);
+				hostInfos.add(etcdClient.getHostInfo(host));
 			}
 		}
 		Map<String, Object> result = new HashMap<>();
@@ -69,22 +65,49 @@ public class HostController {
 	@Path("/{hostId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public HostDetailInfo quertOneHost(@PathParam("hostId") String hostId) throws HMException {
+	public HostInfo quertOneHost(@PathParam("hostId") String hostId) throws HMException {
 		Host host = hostService.queryOne(hostId);
 		if (host == null) {
 			throw new HMException("主机不存在");
 		}
-		return hostClient.getHostDetailInfo(host);
+		
+		HostInfo hostInfo = etcdClient.getHostInfo(host.getHostId());
+		if (hostInfo == null) {
+			hostInfo = new HostInfo(host);
+		} else {
+			hostInfo.setOnline(1);
+		}
+		
+		return new HostInfo(host);
 	}
 
-	@Path("/scan/{startIp}/{endIp}")
+	@Path("/scan/{startIpMask}/{endIpMask}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, Object> scanHosts(@PathParam("startIp") String startIp, @PathParam("endIp") String endIp)
-			throws HMException {
-		log.info("Scan hosts: startIp = " + startIp + ", endIP = " + endIp);
-		return queryAllHosts();
-		// return hostClient.scanHosts(startIp, endIp);
+	public Map<String, Object> scanHosts(@PathParam("startIpMask") String startIpMask,
+			@PathParam("endIpMask") String endIpMask) throws HMException {
+		log.info("Scan hosts: startIp = " + startIpMask + ", endIP = " + endIpMask);
+		
+		List<HostInfo> hostInfos = new ArrayList<>();
+		List<String> ips = hostClient.getIPs(startIpMask, endIpMask);
+		if (ips != null) {
+			for (String ip:ips) {
+				HostConfig config = hostClient.getHostConfig(ip);
+				if (config != null) {
+					if (config.getMonitor() == null) {
+						HostInfo hostInfo = new HostInfo();
+						hostInfo.setHostId(UUID.randomUUID().toString());
+						hostInfo.setHostName(config.getHostName());
+						hostInfo.setManageIp(ip);
+						hostInfos.add(hostInfo);
+					}
+				}
+			}
+		}
+	
+		Map<String, Object> result = new HashMap<>();
+		result.put("data", hostInfos);
+		return result;
 	}
 
 	@Path("/logoff")
@@ -92,7 +115,16 @@ public class HostController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void osLogoff(List<String> hostIds) throws HMException {
 		log.info("do logout for hosts: " + hostIds);
-		// hostClient.osLogout(hosts);
+		if (hostIds != null) {
+			for (String hostId : hostIds) {
+				HostInfo hostInfo = etcdClient.getHostInfo(hostId);
+				if (hostInfo != null && hostInfo.getOnline() == 1) {
+					hostClient.osLogoff(hostInfo.getManageIp());
+				} else {
+					log.error("Host for id[" + hostId + "] not online.");
+				}
+			}
+		}
 	}
 
 	@Path("/shutdown")
@@ -100,7 +132,16 @@ public class HostController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void osShutdown(List<String> hostIds) throws HMException {
 		log.info("do shutdown hosts: " + hostIds);
-		// hostClient.osShutdown(hosts);
+		if (hostIds != null) {
+			for (String hostId : hostIds) {
+				HostInfo hostInfo = etcdClient.getHostInfo(hostId);
+				if (hostInfo != null && hostInfo.getOnline() == 1) {
+					hostClient.osShutdown(hostInfo.getManageIp());
+				} else {
+					log.error("Host for id[" + hostId + "] not online.");
+				}
+			}
+		}
 	}
 
 	@Path("/reboot")
@@ -108,7 +149,16 @@ public class HostController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void osReboot(List<String> hostIds) throws HMException {
 		log.info("do reboot hosts: " + hostIds);
-		// hostClient.osShutdown(hosts);
+		if (hostIds != null) {
+			for (String hostId : hostIds) {
+				HostInfo hostInfo = etcdClient.getHostInfo(hostId);
+				if (hostInfo != null && hostInfo.getOnline() == 1) {
+					hostClient.osReboot(hostInfo.getManageIp());
+				} else {
+					log.error("Host for id[" + hostId + "] not online.");
+				}
+			}
+		}
 	}
 
 	@Path("/message")
@@ -116,7 +166,16 @@ public class HostController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void sendMessage(HostsMessage hostsMessage) throws HMException {
 		log.info("send message to hosts: " + hostsMessage);
-		// hostClient.sendMessage(hostsMessage);
+		if (hostsMessage != null && hostsMessage.getMessage() != null && hostsMessage.getHostIds() != null) {
+			for (String hostId : hostsMessage.getHostIds()) {
+				HostInfo hostInfo = etcdClient.getHostInfo(hostId);
+				if (hostInfo != null && hostInfo.getOnline() == 1) {
+					hostClient.sendMessage(hostInfo.getManageIp(), hostsMessage.getMessage());
+				} else {
+					log.error("Host for id[" + hostId + "] not online.");
+				}
+			}
+		}
 	}
 
 	@Path("/desc")
@@ -124,74 +183,83 @@ public class HostController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateHostDesc(Host host) throws HMException {
 		log.info("update host desc: " + host);
+		Host h = hostService.queryOne(host.getHostId());
+		if (h != null) {
+			h.setDesc(host.getDesc());
+			hostService.update(h);
+		}
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void addHosts(List<HostInfo> hosts) throws HMException {
-		log.info("add hosts: " + hosts);
-		// if (hostInfos != null) {
-		// for (HostDetailInfo detailInfo : hostInfos) {
-		// hostService.add(ModelHelper.toHost(detailInfo));
-		// }
-		// }
+	public void addHosts(List<HostInfo> hostInfos) throws HMException {
+		log.info("add hosts: " + hostInfos);
+		if (hostInfos != null) {
+			for (HostInfo hostInfo : hostInfos) {
+				HostDetailInfo detailInfo = hostClient.addHost(hostInfo);
+				hostService.add(ModelHelper.toHost(detailInfo));
+			}
+		}
 	}
 
 	@GET
 	@Path("/detail/{hostId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public HostDetailInfo getHostDetailInfo(@PathParam("hostId") String hostId) throws HMException {
+		
+		
 		HostDetailInfo detailInfo = new HostDetailInfo();
 		detailInfo.setHostId(hostId);
 		detailInfo.setHostName("host1");
-		detailInfo.setDesc("信息: validateJarFile(E:\\\\work\\wkk\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hyper.monitor\\WEB-INF\\lib\\servlet-api-2.5.jar) - jar not loaded. See Servlet Spec 2.3, section 9.7.2. Offending class: javax/servlet/Servlet.class");
-		detailInfo.setBootTime(new Date());
+		detailInfo.setDesc(
+				"信息: validateJarFile(E:\\\\work\\wkk\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hyper.monitor\\WEB-INF\\lib\\servlet-api-2.5.jar) - jar not loaded. See Servlet Spec 2.3, section 9.7.2. Offending class: javax/servlet/Servlet.class");
+		detailInfo.setBootTime(System.currentTimeMillis());
 		detailInfo.setUpTime(3414145);
-		
+
 		detailInfo.setOs("windows7");
 		detailInfo.setOsPlatform("win7");
 		detailInfo.setOsPlatformFamily("windows");
 		detailInfo.setOsPlatformVersion("7");
-		
+
 		detailInfo.setCpuCores(4);
 		detailInfo.setCpuMhz(3400);
 		detailInfo.setCpuModelName("intel i7");
 		detailInfo.setCpuUsage(80);
-		
+
 		detailInfo.setMemSize(4096);
 		detailInfo.setMemUsed(1458);
 		detailInfo.setMemUsage(30);
-		
+
 		NicInfo nic1 = new NicInfo();
-		nic1.setNicName("nic1");
-		nic1.setIp("192.168.88.106");
+		nic1.setName("nic1");
+		nic1.setIps(new String[] {"192.168.88.106"});
 		nic1.setMac("00:4c:8e:9f:66:1a");
 		detailInfo.getNicInfos().add(nic1);
-		
+
 		NicInfo nic2 = new NicInfo();
-		nic2.setNicName("nic2");
-		nic2.setIp("192.168.88.107");
+		nic2.setName("nic2");
+		nic2.setIps(new String[] {"192.168.88.107"});
 		nic2.setMac("00:4c:8e:9f:66:1b");
 		detailInfo.getNicInfos().add(nic2);
-		
+
 		DiskInfo disk1 = new DiskInfo();
 		disk1.setPath("C:/");
 		disk1.setDevice("/dev/sda1");
 		disk1.setFsType("ntfs");
-		disk1.setDiskSize(690000);
-		disk1.setDiskUsed(4500000);
+		disk1.setTotal(690000);
+		disk1.setUsed(4500000);
 		disk1.setUsedPercent(60);
 		detailInfo.getDiskInfos().add(disk1);
-		
+
 		DiskInfo disk2 = new DiskInfo();
 		disk2.setPath("D:/");
 		disk2.setDevice("/dev/sda2");
 		disk2.setFsType("ntfs");
-		disk2.setDiskSize(77777);
-		disk2.setDiskUsed(444);
+		disk2.setTotal(77777);
+		disk2.setUsed(444);
 		disk2.setUsedPercent(30);
 		detailInfo.getDiskInfos().add(disk2);
-		
+
 		return detailInfo;
 	}
 

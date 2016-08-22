@@ -327,6 +327,7 @@ $(document).delegate("#myModal  #btn_action","click",function(){
 			success: function(ret){
 				// $.messager.alert("消息", message+"成功");
 				$('#myModal').modal("hide");
+				hostGrid.reload();
 			},
 			error: function(ret){
 				$.messager.alert("消息", message+"失败");
@@ -338,6 +339,17 @@ $(document).delegate("#myModal  #btn_action","click",function(){
 $(document).delegate("#addHostsModal  #btn_scan","click",function(){
 	var startIp = $("#addHostsModal #startIp").val();
 	var endIp = $("#addHostsModal #endIp").val();
+	
+	if(startIp == ""){
+		$.messager.alert("提示","必须填写起始地址");
+		return;
+	}
+	
+	if(endIp == ""){
+		$.messager.alert("提示","必须填写结束地址");
+		return;
+	}
+	
 	if (checkIpRange(startIp, endIp)){
 		addHostGrid.reload(contextPath+"/rest/hosts/scan/"+startIp+"/"+endIp);
 	}

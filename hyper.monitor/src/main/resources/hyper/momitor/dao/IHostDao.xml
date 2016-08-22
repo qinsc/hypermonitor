@@ -12,7 +12,7 @@
 		<result property="cpuCores"            column="CPU_CORES"                    jdbcType="INTEGER"/>
 		<result property="cpuModelName"        column="CPU_MODEL_NAME"               jdbcType="VARCHAR"/>
 		<result property="cpuMhz"              column="CPU_MHZ"                      jdbcType="INTEGER"/>
-		<result property="memSize"             column="MEM_SIZE"    				 jdbcType="INTEGER"/>
+		<result property="memSize"             column="MEM_SIZE"    				 jdbcType="BIGINT"/>
 		<result property="groupId"             column="GROUP_ID"          			 jdbcType="VARCHAR"/>
 		<result property="manageIp"            column="MANAGE_IP"          		 	 jdbcType="VARCHAR"/>
 	</resultMap>
@@ -46,7 +46,7 @@
 		,#{cpuCores,                 jdbcType=INTEGER}
 		,#{cpuModelName,             jdbcType=VARCHAR}
 		,#{cpuMhz,                   jdbcType=INTEGER}
-		,#{memSize,                  jdbcType=INTEGER}
+		,#{memSize,                  jdbcType=BIGINT}
 		,#{groupId,                  jdbcType=VARCHAR}
 		,#{manageIp,                 jdbcType=VARCHAR}
 		)
@@ -63,9 +63,9 @@
 		CPU_CORES               = #{cpuCores,                jdbcType=INTEGER},
 		CPU_MODEL_NAME          = #{cpuModelName,            jdbcType=VARCHAR},
 		CPU_MHZ                 = #{cpuMhz,                  jdbcType=INTEGER},
-		MEM_SIZE     		    = #{memSize,                 jdbcType=INTEGER},
-		GROUP_ID                = #{groupId,                 jdbcType=VARCHAR}.
-		MANAGE_IP               = #{manageIp                 jdbcType=VARCHAR}
+		MEM_SIZE     		    = #{memSize,                 jdbcType=BIGINT},
+		GROUP_ID                = #{groupId,                 jdbcType=VARCHAR},
+		MANAGE_IP               = #{manageIp,                jdbcType=VARCHAR}
 		where
 		HOST_ID       			= #{hostId,						jdbcType=VARCHAR}
 	</update>
