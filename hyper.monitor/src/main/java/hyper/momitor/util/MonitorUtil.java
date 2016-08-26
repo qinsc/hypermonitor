@@ -19,8 +19,10 @@ public class MonitorUtil {
 	private static final String MONOTR_IP = "monitor.ip";
 	private static final String ETCD_IP = "etcd.ip";
 	private static final String ETCD_PORT = "etcd.port";
-	private static final String GUCAD_IP = "gucad.ip";
-	private static final String GUCAD_PORT = "gucad.port";
+	private static final String GUACD_IP = "guacd.ip";
+	private static final String GUACD_PORT = "guacd.port";
+	private static final String HEARTBEAT_INTERVAL = "heartbeat.interval";
+	private static final String HEARTBEAT_TIMEOUT = "heartbeat.timeout";
 	
 	public static HostMonitor getMonitor() {
 		if (hostMonitor == null) {
@@ -33,8 +35,10 @@ public class MonitorUtil {
 				hostMonitor.setMonitorIp(prop.getProperty(MONOTR_IP));
 				hostMonitor.setEtcdIp(prop.getProperty(ETCD_IP));
 				hostMonitor.setEtcdPort(prop.getProperty(ETCD_PORT));
-				hostMonitor.setGuacdIp(prop.getProperty(GUCAD_IP));
-				hostMonitor.setGuacdPort(prop.getProperty(GUCAD_PORT));
+				hostMonitor.setGuacdIp(prop.getProperty(GUACD_IP));
+				hostMonitor.setGuacdPort(prop.getProperty(GUACD_PORT));
+				hostMonitor.setHeartBeatInterval(prop.getProperty(HEARTBEAT_INTERVAL));
+				hostMonitor.setHeartBeatTimeout(prop.getProperty(HEARTBEAT_TIMEOUT));
 				return hostMonitor;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

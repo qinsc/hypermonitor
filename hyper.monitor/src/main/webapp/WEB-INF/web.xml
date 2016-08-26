@@ -32,6 +32,18 @@
 		<servlet-name>resteasy-servlet</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
+	
+	<!-- guacd -->
+	<servlet>
+		<servlet-name>guacd-servlet</servlet-name>
+		<servlet-class>
+			hyper.momitor.guacd.DummyGuacamoleTunnelServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>guacd-servlet</servlet-name>
+		<url-pattern>/servlet/guacd</url-pattern>
+	</servlet-mapping>
 
 	<!-- spring -->
 	<context-param>
@@ -61,6 +73,7 @@
 		<init-param>
 			<param-name>excludedPages</param-name>
 			<param-value>
+			/servlet/guacd,
 			/login.jsp,
 			/assets/*,
 			/rest/*

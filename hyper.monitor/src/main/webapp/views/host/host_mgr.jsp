@@ -34,13 +34,14 @@
 					class="table table-striped table-bordered table-hover">
 					<thead>
 						<tr>
-							<th width="5%"><input type="checkbox" class="group-checkable"></th>
-							<th width="5%">状态</th>
-							<th width="15%">主机名</th>
-							<th width="15%">管理IP</th>
-							<th width="15%">系统</th>
-							<th width="35%">备注</th>
-							<th width="5%">操作</th>
+							<th width="40px"><input type="checkbox" class="group-checkable"></th>
+							<th width="80px">状态</th>
+							<th width="150px">主机名</th>
+							<th width="150px">管理IP</th>
+							<th width="80px">远程控制</th>
+							<th width="120px">系统</th>
+							<th >备注</th>
+							<th width="60px">操作</th>
 						</tr>
 					</thead>
 					<tbody id="tbody">

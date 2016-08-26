@@ -13,6 +13,7 @@ import hyper.momitor.vo.HostDetailInfo;
 public class ModelHelper {
 	public static Host toHost(HostDetailInfo detailInfo) {
 		Host host = new Host();
+		host.setHostId(detailInfo.getHostId());
 		host.setHostName(detailInfo.getHostName());
 		host.setOs(detailInfo.getOs());
 		host.setOsPlatform(detailInfo.getOsPlatform());
@@ -22,7 +23,6 @@ public class ModelHelper {
 		host.setCpuModelName(detailInfo.getCpuModelName());
 		host.setCpuMhz(detailInfo.getCpuMhz());
 		host.setMemSize(detailInfo.getMemSize());
-		host.setManageIp(detailInfo.getManageIp());
 		return host;
 	}
 }

@@ -30,10 +30,11 @@ public class HostServiceImpl implements IHostService {
 
     @Override
     public String add(Host host) {
-        String id = UUID.randomUUID().toString();
-        host.setHostId(id);
+    	if (host.getHostId() == null) {
+    		host.setHostId(UUID.randomUUID().toString());
+    	}
         hostDao.add(host);
-        return id;
+        return host.getHostId();
     }
 
     @Override

@@ -5,7 +5,8 @@ public class HostMonitor {
 	private String monitorIp;
 	private String etcdIp;
 	private String etcdPort;
-	private int heartBeatInterval;
+	private String heartBeatInterval;
+	private String heartBeatTimeout;
 
 	private String guacdIp;
 	private String guacdPort;
@@ -103,7 +104,7 @@ public class HostMonitor {
 	/**
 	 * @return the heartBeatInterval
 	 */
-	public int getHeartBeatInterval() {
+	public String getHeartBeatInterval() {
 		return heartBeatInterval;
 	}
 
@@ -111,8 +112,23 @@ public class HostMonitor {
 	 * @param heartBeatInterval
 	 *            the heartBeatInterval to set
 	 */
-	public void setHeartBeatInterval(int heartBeatInterval) {
+	public void setHeartBeatInterval(String heartBeatInterval) {
 		this.heartBeatInterval = heartBeatInterval;
+	}
+
+	/**
+	 * @return the heartBeatTimeout
+	 */
+	public String getHeartBeatTimeout() {
+		return heartBeatTimeout;
+	}
+
+	/**
+	 * @param heartBeatTimeout
+	 *            the heartbeatTimeout to set
+	 */
+	public void setHeartBeatTimeout(String heartBeatTimeout) {
+		this.heartBeatTimeout = heartBeatTimeout;
 	}
 
 }

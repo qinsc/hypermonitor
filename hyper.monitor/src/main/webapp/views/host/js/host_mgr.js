@@ -7,13 +7,14 @@ function render_host_operations(data, type, row){
 		'		操作 <span class="caret"></span>' +
 		'	</button>' +
 		'	<ul class="dropdown-menu dropdown-menu-right">' +
+		'		<li><a id="'+row.hostId+'" onclick="sendMsg(this)">发送消息</a></li>' +   
+		'		<li class="divider"></li>' +    
 		'		<li><a id="'+row.hostId+'" onclick="osLogout(this)">注销</a></li>' +
 		'		<li><a id="'+row.hostId+'" onclick="osShutdown(this)">关机</a></li>' +
 		'		<li><a id="'+row.hostId+'" onclick="osReboot(this)">重启</a></li>' +    
-		'		<li class="divider"></li>' +    
-		'		<li><a id="'+row.hostId+'" onclick="sendMsg(this)">发送消息</a></li>' +   
 		'		<li class="divider"></li>' +     
 		'		<li><a id="'+row.hostId+'" onclick="addHostDesc(this)">备注</a></li>' + 
+		'		<li><a id="'+row.hostId+'" onclick="removeHosts(this)">移除主机</a></li>' + 
 		'	</ul>' + 
 		'</div>'; 
 	return OperationHtml;                                                          
@@ -64,7 +65,15 @@ function initHostDatatables(ctxPath, tableId){
 		              action: function ( e, dt, node, config ) {
 		            	  addHosts();
 		              }
-		          } ],
+		          } ,
+		          {
+		              text: '移除主机',
+		              action: function ( e, dt, node, config ) {
+		            	  removeHosts();
+		              }
+		          } 
+		          
+		          ],
              "columns":[
                  {"data":"check"},
                  {"data" : "online", "render" : function(data, type, full, meta) {
@@ -74,6 +83,20 @@ function initHostDatatables(ctxPath, tableId){
                 	 return '<a id="'+full.hostId+'" href="#" onclick="toShowHostDetail(this)">'+data+'</a>';
         		 }},
                  {"data" : "manageIp"},  
+        		 {render: function(data, type, full, meta) {
+        			 var remoteCtlHtml =  
+	        			'<div class="btn-group" style="min-width:80px;">                                                                                                           ' +
+	        			'  <button type="button" class="btn btn-success" id="'+full.hostId+'" onclick="vnc(this)">VNC</button>      						   ' +
+	        			'  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> ' +
+	        			'    <span class="caret"></span>                                                                                                   ' +
+	        			'    <span class="sr-only">Toggle Dropdown</span>                                                                                  ' +
+	        			'  </button>                                                                                                                       ' +
+	        			'  <ul class="dropdown-menu" style="background-color: #5cb85c; min-width: 80px;">                                                                                                      ' +
+	        			'    <li><a id="'+full.hostId+'" style="background-color: #5cb85c; font-size: 14px; color: #fff;" onclick="rdp(this)">RDP</a></li>                                                			   ' +
+	        			'  </ul>                                                                                                                           ' +
+	        			'</div>';
+        			 return remoteCtlHtml;
+        		 }},
                  {"data" : "os", "orderable": false},  
                  {"data" : "desc", "orderable": false},  
                  { render: render_host_operations, "orderable":false} 
@@ -89,10 +112,10 @@ function initAddHostDatatables(tableId){
         idField:"hostId",
         dataTable: {
         	dom: 'rtip',
-//            "ajax": {
-//            	 url:contextPath+"/rest/hosts/",
-//            	 type:"GET"
-//             }, 
+// "ajax": {
+// url:contextPath+"/rest/hosts/",
+// type:"GET"
+// },
         	 "processing": false,
              "pageLength": 5,
              "columns":[
@@ -128,6 +151,16 @@ function toShowHostDetail(row){
 			$.messager.alert("消息", "获取主机详情失败");
 		}
 	});
+}
+
+function vnc(row){
+	var host = hostGrid.getRowData(row.id);
+	window.open(contextPath+"/views/host/guacd.jsp?protocol=vnc&hostIp=" + host.manageIp);
+}
+
+function rdp(row){
+	var host = hostGrid.getRowData(row.id);
+	window.open(contextPath+"/views/host/guacd.jsp?protocol=rdp&hostIp=" + host.manageIp);
 }
 
 function showHostDetail(detialInfo){
@@ -221,6 +254,32 @@ function doOsOpertaion(row, opt){
 			},
 			error: function(ret){
 				$.messager.alert("消息", "主机"+opt+"失败");
+			}
+		});
+    });
+}
+
+function removeHosts(row){
+	var hostIds = getselectHostIds(row);
+	if (hostIds.length == 0){
+		$.messager.alert("提示", "请选择要操作的主机");
+		return;
+	}
+	$.messager.confirm("确认", "确定要移除所选机器吗？", function() { 
+		var url = contextPath+"/rest/hosts/remove";
+		
+		
+		$.ajax({
+			url: url,
+			type: "post",
+			contentType: "application/json",
+			data:JSON.stringify(hostIds),
+			success: function(ret){
+				$.messager.alert("消息", "主机移除成功");
+				hostGrid.reload();
+			},
+			error: function(ret){
+				$.messager.alert("消息", "主机移除失败");
 			}
 		});
     });
@@ -350,7 +409,9 @@ $(document).delegate("#addHostsModal  #btn_scan","click",function(){
 		return;
 	}
 	
-	if (checkIpRange(startIp, endIp)){
+	if (isCIDR(startIp) && isCIDR(endIp)){
+		startIp = startIp.replace("/",":");
+		endIp = endIp.replace("/",":");
 		addHostGrid.reload(contextPath+"/rest/hosts/scan/"+startIp+"/"+endIp);
 	}
 });
@@ -409,4 +470,54 @@ function getDateDiff(t) {
 		return "1 秒";
 	}
 	return rs;
+}
+
+function isCIDR(ipMac){
+	var cidr = ipMac.split("/");
+	if (cidr.length != 2) {
+		$.messager.alert("提示", "地址"+ ipMac + "不是一个合法的地址");
+		return false;
+	}
+	return isIP(cidr[0]) && isMac(cidr[1]);
+}
+
+
+function isMac(mac){
+    var macInt = parseInt(mac);
+	if(macInt < 0 || macInt > 32){
+		return false;
+	}
+	return true;
+}
+
+function isIP(addr){
+    var part_addr=addr.split(".");
+    if(part_addr.length != 4){
+        return false;
+    }else{
+        var part;
+        for(part in part_addr){
+            if(isNumeric(part_addr[part])){
+                if(parseInt(part_addr[part])<0 || parseInt(part_addr[part])>255){
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
+function isNumeric(str){
+    if(str.length==0){
+        return false;
+    }
+    for(var i=0;i<str.length;i++){
+        if(str.charAt(i)<"0"||str.charAt(i)>"9"){
+            return false;
+        }
+    }
+    return true;
 }
