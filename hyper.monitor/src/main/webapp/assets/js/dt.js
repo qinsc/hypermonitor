@@ -77,7 +77,7 @@ var Datatable = function() {
                     "ajax": { // define ajax settings
                         "url": "", // ajax URL
                         "type": "POST", // request type
-                        "timeout": 20000,
+                        "timeout": 300000,
                         "data": function(data) { // add request parameters before submit
                             $.each(ajaxParams, function(key, value) {
                                 data[key] = value;

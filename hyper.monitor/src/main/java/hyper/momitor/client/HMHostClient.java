@@ -26,25 +26,6 @@ import hyper.momitor.vo.HostMonitor;
 public class HMHostClient {
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
-	public HostDetailInfo getHostDetailInfo(HostInfo hostInfo) throws HMException {
-		HostDetailInfo detailInfo = getHostDetailInfo(hostInfo.getManageIp());
-		return detailInfo;
-	}
-	
-	public List<HostDetailInfo> scanHosts(String startIp,String endIp) throws HMException {
-		List<HostDetailInfo> detailInfos = new ArrayList<>();
-		List<String> ips = getIPs(startIp,endIp);
-		if (ips != null) {
-			ips.forEach(ip -> {
-				HostDetailInfo detailInfo = getHostDetailInfo(ip);
-				if (detailInfo != null) {
-					detailInfos.add(detailInfo);
-				}
-			});
-		}
-		return detailInfos;
-	}
-	
 	public void osLogoff(String manageId) throws HMException {
 		String url = "http://" + manageId + ":8080/rest/host/logoff";
 		try {
@@ -81,13 +62,13 @@ public class HMHostClient {
 		}
 	}
 	
-	public HostDetailInfo getHostDetailInfo(String manageId) {
-		String url = "http://" + manageId + ":8080/rest/host/info";
+	public String getHostDetailInfo(String manageId) {
+		String url = "http://" + manageId + ":8080/rest/host/detailinfo";
 		try {
 			String rs = RestUtil.doGet(url, null);
 			System.out.println("HostDetailInfo = " + rs);
 			if (rs != null) {
-				return new ObjectMapper().readValue(rs, HostDetailInfo.class);
+				return rs;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,12 +84,20 @@ public class HMHostClient {
 				return objectMapper.readValue(rs, HostConfig.class);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Error: " + e.getMessage());
 		}
 		return null;
 	}
 	
 	public List<String> getIPs(String startIp, String endIp) throws HMException{
+		List<String> ips = new ArrayList<>();
+		
+		if (startIp.equals(endIp)) {
+			String ip = startIp.split(":")[0];
+			ips.add(ip);
+			return ips;
+		}
+		
 		startIp = startIp.replace(":", "/");
 		endIp = endIp.replace(":", "/");
 		
@@ -129,7 +118,7 @@ public class HMHostClient {
 				return allIpsList.subList(index1, index2);
 			} 
 		}
-		return new ArrayList<>();
+		return ips;
 	}
 	
 	public HostDetailInfo addHost(HostInfo hostInfo) throws HMException {

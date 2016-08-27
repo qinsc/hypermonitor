@@ -47,7 +47,7 @@
 	<script src="../assets/js/dataTables/dataTables.bootstrap.min.js"></script>
 	<script src="../assets/js/dataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
 	<script src="../assets/js/dataTables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
-	<script src="../assets/js/custom-scripts.js"></script>
+	<script src="../assets/js/hm.js"></script>
 </body>
 
 </html>

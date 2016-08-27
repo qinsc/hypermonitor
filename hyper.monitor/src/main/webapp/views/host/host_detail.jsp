@@ -25,8 +25,9 @@ legend {
 					<h4 class="modal-title" id="detailHostsModalLabel"></h4>
 				</div>
 				<div class="modal-body">
-					<div style="overflow-y:auto; overflow-x:hidden; height: 500px; width: 570px;">
-						<fieldset>
+					<div style="overflow-y: auto; overflow-x: auto; height: 500px; width: 570px;">
+						<div id="info" style="font-size: 10px; font-family: Microsoft YaHei;"></div>
+						<!-- <fieldset>
 							<legend>基本信息</legend> 
 					    	<dl class="dl-horizontal">
 								  <dt>主机名</dt>
@@ -92,7 +93,7 @@ legend {
 						
 						<fieldset id="disks">
 							<legend>硬盘</legend> 
-						</fieldset>
+						</fieldset> -->
 					</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>

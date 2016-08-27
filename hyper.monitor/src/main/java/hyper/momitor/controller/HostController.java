@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,6 +22,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
+
+import com.google.gson.Gson;
 
 import hyper.momitor.client.EtcdClient;
 import hyper.momitor.client.HMHostClient;
@@ -83,24 +88,42 @@ public class HostController {
 			@PathParam("endIpMask") String endIpMask) throws HMException {
 		log.info("Scan hosts: startIp = " + startIpMask + ", endIP = " + endIpMask);
 
-		List<HostInfo> hostInfos = new ArrayList<>();
+		final List<HostInfo> hostInfos = new ArrayList<>();
+		System.out.println("hostInfos = " + hostInfos.hashCode());
 		List<String> ips = hMHostClient.getIPs(startIpMask, endIpMask);
 		if (ips != null) {
+			ExecutorService pool = Executors.newCachedThreadPool();
 			for (String ip : ips) {
-				HostConfig config = hMHostClient.getHostConfig(ip);
-				if (config != null) {
-					if (config.getMonitor() == null) {
-						HostInfo hostInfo = new HostInfo();
-						hostInfo.setHostId(UUID.randomUUID().toString());
-						hostInfo.setHostName(config.getHostName());
-						hostInfo.setManageIp(ip);
-						hostInfos.add(hostInfo);
+				pool.submit(new Runnable() {
+					public void run() {
+						System.out.println("Scan host: " + ip);
+						HostConfig config = hMHostClient.getHostConfig(ip);
+						if (config != null) {
+							if (config.getMonitor() == null) {
+								System.out.println("hostInfos = " + hostInfos.hashCode());
+								HostInfo hostInfo = new HostInfo();
+								hostInfo.setHostId(UUID.randomUUID().toString());
+								hostInfo.setHostName(config.getHostName());
+								hostInfo.setManageIp(ip);
+								hostInfos.add(hostInfo);
+								System.out.println("Add host: " + ip);
+							}
+						}
 					}
-				}
+				});
 			}
+			
+			pool.shutdown();
+			try {
+				pool.awaitTermination(5,TimeUnit.MINUTES);
+			} catch (InterruptedException e) {
+				System.out.println("await error  ...");
+			}
+			System.out.println("finish ... ");
 		}
 
 		Map<String, Object> result = new HashMap<>();
+		System.out.println("Size: " + hostInfos.size());
 		result.put("data", hostInfos);
 		return result;
 	}
@@ -192,10 +215,12 @@ public class HostController {
 		if (hostInfos != null) {
 			for (HostInfo hostInfo : hostInfos) {
 				HostDetailInfo detailInfo = hMHostClient.addHost(hostInfo);
-				Host host = ModelHelper.toHost(detailInfo);
-				host.setHostId(hostInfo.getHostId());
-				host.setManageIp(hostInfo.getManageIp());
-				hostService.add(host);
+				if (detailInfo != null) {
+					Host host = ModelHelper.toHost(detailInfo);
+					host.setHostId(hostInfo.getHostId());
+					host.setManageIp(hostInfo.getManageIp());
+					hostService.add(host);
+				}
 			}
 		}
 	}
@@ -219,12 +244,47 @@ public class HostController {
 	@GET
 	@Path("/detail/{hostId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public HostDetailInfo getHostDetailInfo(@PathParam("hostId") String hostId) throws HMException {
+	public String getHostDetailInfo(@PathParam("hostId") String hostId) throws HMException {
 		Host host = hostService.queryOne(hostId);
 		if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
-			return hMHostClient.getHostDetailInfo(host.getManageIp());
+			String info = new Gson().toJson(hMHostClient.getHostDetailInfo(host.getManageIp()));
+			System.out.println("info json =" + info);
+			return info;  
 		}
 		throw new HMException("主机不存在");
 	}
+	
+//	public static void main(String[] args) {
+//		ExecutorService pool = Executors.newCachedThreadPool();
+//		for (int i = 0; i < 30; i++) {
+//			final int n = i;
+//			pool.execute(new Runnable() {
+//				public void run() {
+//					try {
+//						TimeUnit.MICROSECONDS.sleep(50);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					System.out.println(n);
+//				}
+//			});
+//		}
+//		
+//		while(true) {
+//			System.out.println("pool status = " + pool.aw);
+//			if (pool.isTerminated() || pool.isShutdown()) {
+//				break;
+//			}
+//			try {
+//				TimeUnit.SECONDS.sleep(1);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//		pool.shutdown();
+//		System.out.println("finish");
+//	}
 
 }

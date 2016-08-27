@@ -140,17 +140,28 @@ function osReboot(row) {
 }
 
 function toShowHostDetail(row){
+	$("#detailHostsModal #detailHostsModalLabel").text("主机详情");
+	$("#detailHostsModal #info").html(""); 
+    $('#detailHostsModal').modal({keyboard:false,show:true});
+    
 	$.ajax({
 		url: contextPath+"/rest/hosts/detail/"+row.id,
 		type: "get",
 		contentType: "application/json",
 		success: function(ret){
-			showHostDetail(ret);
+			$("#detailHostsModal #info").html(formatHtml(ret)); 
 		},
-		error: function(ret){
-			$.messager.alert("消息", "获取主机详情失败");
+		error: function(err){
+			// $.messager.alert("消息", "获取主机详情失败");
+			alert("Error :" + JSON.stringify(err))
 		}
 	});
+}
+
+function formatHtml(html){
+	var s = html.replace(/\s/g, "&nbsp;")
+	// s = s.replace("　", "&nbsp;")
+	return s;
 }
 
 function vnc(row){
@@ -163,67 +174,67 @@ function rdp(row){
 	window.open(contextPath+"/views/host/guacd.jsp?protocol=rdp&hostIp=" + host.manageIp);
 }
 
-function showHostDetail(detialInfo){
-	$("#detailHostsModal #detailHostsModalLabel").text("主机详情");
-	
-	$("#detailHostsModal #hostName").html(detialInfo.hostName); 
-	$("#detailHostsModal #hostDesc").html(detialInfo.desc); 
-	
-	$("#detailHostsModal #bootTime").html(getLocalTime(detialInfo.bootTime/1000)); 
-	$("#detailHostsModal #upTime").html(getDateDiff(detialInfo.upTime/1000)); 
-	
-	$("#detailHostsModal #os").html(detialInfo.os); 
-	$("#detailHostsModal #osPlatform").html(detialInfo.osPlatform); 
-	$("#detailHostsModal #osPlatformFamily").html(detialInfo.osPlatformFamily); 
-	$("#detailHostsModal #osPlatformVersion").html(detialInfo.osPlatformVersion); 
-	
-	$("#detailHostsModal #cpuCores").html(detialInfo.cpuCores); 
-	$("#detailHostsModal #cpuModelName").html(detialInfo.cpuModelName); 
-	$("#detailHostsModal #cpuMhz").html(detialInfo.cpuMhz); 
-	$("#detailHostsModal #cpuUsage").html(detialInfo.cpuUsage); 
-	
-	$("#detailHostsModal #memSize").html(detialInfo.memSize); 
-	$("#detailHostsModal #memUsed").html(detialInfo.memUsed); 
-	$("#detailHostsModal #memUsage").html(detialInfo.memUsage); 
-	
-	$("#detailHostsModal #nics").empty();
-	$("#detailHostsModal #nics").append($("<legend>网卡</legend>").get(0));  
-	$.each(detialInfo.nicInfos, function(i, val){
-		var nic = 
-			'<dl class="dl-horizontal">' +
-			'  <dt>网卡名称</dt> ' +
-			'  <dd>' + val.nicName + '</dd>'+						  
-			'  <dt>网卡IP地址</dt> ' +
-			'  <dd>' + val.ip + '</dd>'	 +			  
-			'  <dt>网卡物理地址</dt> ' +
-			'  <dd>' + val.mac + '</dd>'	 +			  
-			'</dl> ';
-		$("#detailHostsModal #nics").append($(nic).get(0));
-	});
-	
-	$("#detailHostsModal #disks").empty();
-	$("#detailHostsModal #disks").append($("<legend>硬盘</legend>").get(0));  
-	$.each(detialInfo.diskInfos, function(i, val){
-		var disk = 
-			'<dl class="dl-horizontal">' +
-			'  <dt>硬盘</dt> ' +
-			'  <dd>' + val.path + '</dd>'+						  
-			'  <dt>设备路径</dt> ' +
-			'  <dd>' + val.device + '</dd>'	 +			  
-			'  <dt>文件系统类型</dt> ' +
-			'  <dd>' + val.fsType + '</dd>'	 +			  
-			'  <dt>总大小</dt> ' +
-			'  <dd>' + val.diskSize + '</dd>'	 +			  
-			'  <dt>已使用</dt> ' +
-			'  <dd>' + val.diskUsed + '</dd>'	 +			  
-			'  <dt>使用率</dt> ' +
-			'  <dd>' + val.usedPercent + '</dd>' +			  
-			'</dl> ';
-		$("#detailHostsModal #disks").append($(disk).get(0));
-	});
-	
-    $('#detailHostsModal').modal({keyboard:false,show:true});
-}
+//function showHostDetail(detialInfo){
+//	$("#detailHostsModal #detailHostsModalLabel").text("主机详情");
+//	
+//	$("#detailHostsModal #hostName").html(detialInfo.hostName); 
+//	$("#detailHostsModal #hostDesc").html(detialInfo.desc); 
+//	
+//	$("#detailHostsModal #bootTime").html(getLocalTime(detialInfo.bootTime/1000)); 
+//	$("#detailHostsModal #upTime").html(getDateDiff(detialInfo.upTime/1000)); 
+//	
+//	$("#detailHostsModal #os").html(detialInfo.os); 
+//	$("#detailHostsModal #osPlatform").html(detialInfo.osPlatform); 
+//	$("#detailHostsModal #osPlatformFamily").html(detialInfo.osPlatformFamily); 
+//	$("#detailHostsModal #osPlatformVersion").html(detialInfo.osPlatformVersion); 
+//	
+//	$("#detailHostsModal #cpuCores").html(detialInfo.cpuCores); 
+//	$("#detailHostsModal #cpuModelName").html(detialInfo.cpuModelName); 
+//	$("#detailHostsModal #cpuMhz").html(detialInfo.cpuMhz); 
+//	$("#detailHostsModal #cpuUsage").html(detialInfo.cpuUsage); 
+//	
+//	$("#detailHostsModal #memSize").html(detialInfo.memSize); 
+//	$("#detailHostsModal #memUsed").html(detialInfo.memUsed); 
+//	$("#detailHostsModal #memUsage").html(detialInfo.memUsage); 
+//	
+//	$("#detailHostsModal #nics").empty();
+//	$("#detailHostsModal #nics").append($("<legend>网卡</legend>").get(0));  
+//	$.each(detialInfo.nicInfos, function(i, val){
+//		var nic = 
+//			'<dl class="dl-horizontal">' +
+//			'  <dt>网卡名称</dt> ' +
+//			'  <dd>' + val.nicName + '</dd>'+						  
+//			'  <dt>网卡IP地址</dt> ' +
+//			'  <dd>' + val.ip + '</dd>'	 +			  
+//			'  <dt>网卡物理地址</dt> ' +
+//			'  <dd>' + val.mac + '</dd>'	 +			  
+//			'</dl> ';
+//		$("#detailHostsModal #nics").append($(nic).get(0));
+//	});
+//	
+//	$("#detailHostsModal #disks").empty();
+//	$("#detailHostsModal #disks").append($("<legend>硬盘</legend>").get(0));  
+//	$.each(detialInfo.diskInfos, function(i, val){
+//		var disk = 
+//			'<dl class="dl-horizontal">' +
+//			'  <dt>硬盘</dt> ' +
+//			'  <dd>' + val.path + '</dd>'+						  
+//			'  <dt>设备路径</dt> ' +
+//			'  <dd>' + val.device + '</dd>'	 +			  
+//			'  <dt>文件系统类型</dt> ' +
+//			'  <dd>' + val.fsType + '</dd>'	 +			  
+//			'  <dt>总大小</dt> ' +
+//			'  <dd>' + val.diskSize + '</dd>'	 +			  
+//			'  <dt>已使用</dt> ' +
+//			'  <dd>' + val.diskUsed + '</dd>'	 +			  
+//			'  <dt>使用率</dt> ' +
+//			'  <dd>' + val.usedPercent + '</dd>' +			  
+//			'</dl> ';
+//		$("#detailHostsModal #disks").append($(disk).get(0));
+//	});
+//	
+//    $('#detailHostsModal').modal({keyboard:false,show:true});
+//}
 
 function doOsOpertaion(row, opt){
 	var hostIds = getselectHostIds(row);
@@ -268,7 +279,6 @@ function removeHosts(row){
 	$.messager.confirm("确认", "确定要移除所选机器吗？", function() { 
 		var url = contextPath+"/rest/hosts/remove";
 		
-		
 		$.ajax({
 			url: url,
 			type: "post",
@@ -311,6 +321,8 @@ function addHostDesc(row) {
 	$("#myModal #text").val(host.desc);
 	$("#myModal #ids").val(row.id); 
 	$("#myModal #opt").val("addDesc"); 
+	
+	addHostGrid.dataTable.clear();
 	
     $('#myModal').modal({keyboard:false,show:true});
 }
