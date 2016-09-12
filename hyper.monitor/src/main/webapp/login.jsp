@@ -15,8 +15,11 @@
 	<link rel="stylesheet" type="text/css" href="assets/css/signin.css" />
 	<%@include file="views/common/common.jsp"%>
 </head>
-<body style="background-image: url(<%=contextPath%>/assets/images/login_bkg.jpg); background-size:cover; background-repeat: no-repeat;">
-	<div class="container" >
+<body style="padding-top:10px; background-image: url(<%=contextPath%>/assets/images/login_bkg.jpg); background-size:cover; background-repeat: no-repeat;">
+	<div style="width: 100%; text-align:right; margin-top: 10px; padding-right: 10px;">
+		<a style="font-size: 16px;" href="<%=contextPath%>/rest/agent/download">下载AGENＴ</a>
+	</div>
+	<div class="container" style="padding-top:80px; ">
 		<p class="form-signin-heading">Hyper Monitor</p>
 		<form class="form-signin" method="post" id="loginForm"
 			action="<%=contextPath%>/rest/users/login">

@@ -85,13 +85,13 @@ function initHostDatatables(ctxPath, tableId){
                  {"data" : "manageIp"},  
         		 {render: function(data, type, full, meta) {
         			 var remoteCtlHtml =  
-	        			'<div class="btn-group" style="min-width:80px;">                                                                                                           ' +
+	        			'<div class="btn-group" style="min-width:90px;">                                                                                                           ' +
 	        			'  <button type="button" class="btn btn-success" id="'+full.hostId+'" onclick="vnc(this)">VNC</button>      						   ' +
 	        			'  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> ' +
 	        			'    <span class="caret"></span>                                                                                                   ' +
 	        			'    <span class="sr-only">Toggle Dropdown</span>                                                                                  ' +
 	        			'  </button>                                                                                                                       ' +
-	        			'  <ul class="dropdown-menu" style="background-color: #5cb85c; min-width: 80px;">                                                                                                      ' +
+	        			'  <ul class="dropdown-menu" style="background-color: #5cb85c; min-width: 90px;">                                                                                                      ' +
 	        			'    <li><a id="'+full.hostId+'" style="background-color: #5cb85c; font-size: 14px; color: #fff;" onclick="rdp(this)">RDP</a></li>                                                			   ' +
 	        			'  </ul>                                                                                                                           ' +
 	        			'</div>';
@@ -321,8 +321,6 @@ function addHostDesc(row) {
 	$("#myModal #text").val(host.desc);
 	$("#myModal #ids").val(row.id); 
 	$("#myModal #opt").val("addDesc"); 
-	
-	addHostGrid.dataTable.clear();
 	
     $('#myModal').modal({keyboard:false,show:true});
 }

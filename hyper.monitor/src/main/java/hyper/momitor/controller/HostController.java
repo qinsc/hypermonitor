@@ -88,16 +88,18 @@ public class HostController {
 			@PathParam("endIpMask") String endIpMask) throws HMException {
 		log.info("Scan hosts: startIp = " + startIpMask + ", endIP = " + endIpMask);
 
+		long t = System.currentTimeMillis();
 		final List<HostInfo> hostInfos = new ArrayList<>();
 		System.out.println("hostInfos = " + hostInfos.hashCode());
 		List<String> ips = hMHostClient.getIPs(startIpMask, endIpMask);
 		if (ips != null) {
-			ExecutorService pool = Executors.newCachedThreadPool();
+			ExecutorService pool = Executors.newFixedThreadPool(20);
 			for (String ip : ips) {
 				pool.submit(new Runnable() {
 					public void run() {
+						long t1 = System.currentTimeMillis();
 						System.out.println("Scan host: " + ip);
-						HostConfig config = hMHostClient.getHostConfig(ip);
+						HostConfig config = hMHostClient.getHostConfig(ip, 5000);	// 超时时间5秒
 						if (config != null) {
 							if (config.getMonitor() == null) {
 								System.out.println("hostInfos = " + hostInfos.hashCode());
@@ -109,6 +111,7 @@ public class HostController {
 								System.out.println("Add host: " + ip);
 							}
 						}
+						System.out.println("Scan host " + ip + " cost: " + (System.currentTimeMillis() - t1)/1000 + "s");
 					}
 				});
 			}
@@ -121,6 +124,7 @@ public class HostController {
 			}
 			System.out.println("finish ... ");
 		}
+		System.out.println("Scan " + startIpMask + " -> " + endIpMask + " cost :" + (System.currentTimeMillis() - t)/1000 + " s");
 
 		Map<String, Object> result = new HashMap<>();
 		System.out.println("Size: " + hostInfos.size());

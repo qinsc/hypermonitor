@@ -10,7 +10,8 @@
 		<param-name>resteasy.resources</param-name>
 		<param-value>
 			hyper.momitor.controller.UserController,
-			hyper.momitor.controller.HostController
+			hyper.momitor.controller.HostController,
+			hyper.momitor.controller.AgentController
 		</param-value>
 	</context-param>
 	<context-param>

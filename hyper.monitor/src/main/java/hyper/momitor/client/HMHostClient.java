@@ -54,7 +54,7 @@ public class HMHostClient {
 	}
 	
 	public void sendMessage(String manageId, String message) throws HMException {
-		String url = "http://" + manageId + ":8080/rest/host/message";
+		String url = "http://" + manageId + ":8081/rest/gui/message";
 		try {
 			RestUtil.doPost(url, message, null);
 		} catch (Exception e) {
@@ -76,10 +76,14 @@ public class HMHostClient {
 		return null;
 	}
 	
-	public HostConfig getHostConfig(String manageId) {
+	public HostConfig getHostConfig(String manageId) {		
+		return getHostConfig(manageId, 0);
+	}
+	
+	public HostConfig getHostConfig(String manageId, int timeout) {
 		String url = "http://" + manageId + ":8080/rest/host/config";
 		try {
-			String rs = RestUtil.doGet(url, null);
+			String rs = RestUtil.doGet(url, null, timeout);
 			if (rs != null) {
 				return objectMapper.readValue(rs, HostConfig.class);
 			}

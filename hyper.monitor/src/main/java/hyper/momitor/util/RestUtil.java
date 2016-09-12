@@ -25,6 +25,21 @@ public class RestUtil {
 	public static String doGet(String url, Map<String, String> header) throws Exception {
 		return doRest(url, "GET", null, header, 0);
 	}
+	
+	/**
+	 * GET
+	 * 
+	 * @param method
+	 * @param url
+	 * @param jsonData
+	 * @param header
+	 * @param timeout
+	 * @return
+	 * @throws Exception
+	 */
+	public static String doGet(String url, Map<String, String> header, int timeout) throws Exception {
+		return doRest(url, "GET", null, header, timeout);
+	}
 
 	/**
 	 * POST
@@ -87,18 +102,20 @@ public class RestUtil {
 	 * @param method
 	 * @param jsonData
 	 * @param header
+	 * @param timeout
 	 * @return
 	 * @throws Exception
 	 */
 	private static String doRest(String url, String method, String jsonData, Map<String, String> header,
-			int readTimeout) throws Exception {
+			int timeout) throws Exception {
 		URL restURL = new URL(url);
 		HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
 		conn.setRequestMethod(method);
 		conn.setDoInput(true);
 		conn.setUseCaches(false);
-		if (readTimeout > 0) {
-			conn.setReadTimeout(readTimeout);
+		if (timeout > 0) {
+			conn.setReadTimeout(timeout);
+			conn.setConnectTimeout(timeout);
 		}
 
 		conn.setInstanceFollowRedirects(true);
