@@ -20,6 +20,7 @@ public class Host implements Serializable {
 	private long memSize;
 
 	private String groupId;
+	private String groupName;
 	private String manageIp;
 
 	/**
@@ -231,6 +232,20 @@ public class Host implements Serializable {
 				+ (osPlatformVersion != null ? "osPlatformVersion=" + osPlatformVersion + ", " : "") + "cpuCores=" + cpuCores + ", "
 				+ (cpuModelName != null ? "cpuModelName=" + cpuModelName + ", " : "") + "cpuMhz=" + cpuMhz + ", memSize=" + memSize + ", "
 				+ (groupId != null ? "groupId=" + groupId + ", " : "") + (manageIp != null ? "manageIp=" + manageIp : "") + "]";
+	}
+
+	/**
+	 * @return the groupName
+	 */
+	public String getGroupName() {
+		return groupName;
+	}
+
+	/**
+	 * @param groupName the groupName to set
+	 */
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 }

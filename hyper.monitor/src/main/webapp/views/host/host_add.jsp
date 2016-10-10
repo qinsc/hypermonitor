@@ -15,11 +15,11 @@
 						<div class="col-lg-9 col-md-9 col-xs-9" style="padding-left: 0px; padding-right: 4px;">
 							<div>
 								<label for="startIp" class="sr-only">起始地址</label>
-								<input type="text" id="startIp" name="startIp" class="form-control" placeholder="起始地址" required autofocus>
+								<input type="text" id="startIp" name="startIp" class="form-control" placeholder="起始地址，例如 192.168.1.21/24" required autofocus>
 							</div>
 							<div style="margin-top: 4px;">
 								<label for="endIp" class="sr-only">起始地址</label>
-								<input type="text" id="endIp" name="endIp" class="form-control" placeholder="结束地址" required autofocus>	
+								<input type="text" id="endIp" name="endIp" class="form-control" placeholder="结束地址，例如 192.168.1.46/24" required autofocus>	
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-xs-3"  style="height: 72px; padding-right: 2px; padding-left: 4px;">

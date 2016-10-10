@@ -27,6 +27,11 @@ public class HostGroupServiceImpl implements IHostGroupService {
     public HostGroup queryOne(String id) {
         return hostGroupDao.queryOne(id);
     }
+    
+    @Override
+    public HostGroup queryByName(String groupName) {
+    	return hostGroupDao.queryByName(groupName);
+    }
 
     @Override
     public String add(HostGroup hostGroup) {

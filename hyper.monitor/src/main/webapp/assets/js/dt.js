@@ -7,18 +7,9 @@ var Datatable = function() {
     var tableInitialized = false;
     var ajaxParams = {}; // set filter mode
     var the;
-
-//    var countSelectedRecords = function() {
-//        var selected = $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
-//        if (selected > 0) {
-//            $('.table-group-actions > span', tableWrapper).text(selected);
-//        } else {
-//            $('.table-group-actions > span', tableWrapper).text("");
-//        }
-//    };
+    var ajaxFinishCallback;
 
     return {
-
         //main function to initiate the module
         init: function(options) {
 
@@ -40,7 +31,7 @@ var Datatable = function() {
                 	"dom": "<'row'<'col-md-8 col-sm-12 '<'table-group-actions '>><'col-md-4 col-sm-12 pull-right'f>r><'table-scrollable't><'row'<'col-md-8 col-sm-12'i><'col-md-4 col-sm-12'p>>",
                     "pageLength": 10, // default records per page
                     "language":{
-                    	"sProcessing":   "处理中...",
+                    	"sProcessing":   "",
                     	"sLengthMenu":   "显示 _MENU_ 项结果",
                     	"sZeroRecords":  "没有匹配结果",
                     	"sInfo":         "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
@@ -71,7 +62,7 @@ var Datatable = function() {
                     "order": [],
                     "pagingType": "full_numbers", // pagination type(bootstrap, bootstrap_full_number or bootstrap_extended)
                     "autoWidth": false, // disable fixed width and enable fluid table
-                    "processing": false, // enable/disable display message box on record load
+                    "processing": true, // enable/disable display message box on record load
                     "serverSide": false, // enable/disable server side ajax loading
 
                     "ajax": { // define ajax settings
@@ -111,13 +102,21 @@ var Datatable = function() {
                             if (tableOptions.onSuccess) {
                                 tableOptions.onSuccess.call(undefined, the, res);
                             }
-
+                            
+                            if (ajaxFinishCallback){
+                            	ajaxFinishCallback();
+                            }  
+                            
                             return res.data;
                         },
                         "error": function() { // handle general connection errors
                             if (tableOptions.onError) {
                                 tableOptions.onError.call(undefined, the);
                             }
+                            
+                            if (ajaxFinishCallback){
+                            	ajaxFinishCallback();
+                            } 
                         }
                     },
 
@@ -126,12 +125,15 @@ var Datatable = function() {
                             tableInitialized = true; // set table initialized
                             table.show(); // display table
                         }
-//                        countSelectedRecords(); // reset selected records indicator
 
                         // callback for ajax data load
                         if (tableOptions.onDataLoad) {
                             tableOptions.onDataLoad.call(undefined, the);
                         }
+                        
+                        if (ajaxFinishCallback){
+                        	ajaxFinishCallback();
+                        }   
                     }
                 }
             }, options);
@@ -174,7 +176,6 @@ var Datatable = function() {
                     $(this).prop("checked", checked);
                 });
                 $.uniform.update(set);
-//                countSelectedRecords();
             });
 
             // handle row's checkbox click
@@ -184,71 +185,112 @@ var Datatable = function() {
             		$('.group-checkable', table).prop("checked", checked)
             	}
             	$.uniform.update($('.group-checkable', table));
-//                countSelectedRecords();
             });
 
-            // handle filter submit button click
-            table.on('click', '.filter-submit', function(e) {
-                e.preventDefault();
-                the.submitFilter();
-            });
-
-            // handle filter cancel button click
-            table.on('click', '.filter-cancel', function(e) {
-                e.preventDefault();
-                the.resetFilter();
-            });
+//            // handle filter submit button click
+//            table.on('click', '.filter-submit', function(e) {
+//            	debugger;
+//                e.preventDefault();
+//                the.submitFilter();
+//            });
+//
+//            // handle filter cancel button click
+//            table.on('click', '.filter-cancel', function(e) {
+//            	debugger;
+//                e.preventDefault();
+//                the.resetFilter();
+//            });
             
-            var _html = $(".dataTables_filter",tableWrapper);
-            var searchBox = $(".form-control",_html);
-            searchBox.attr("placeholder","筛选");
-            var searchImg = '<span class="input-group-addon"><i class="fa fa-search" style="float: right;"></i></span>';
-            _html.addClass("input-group");
-            _html.append(searchBox);
-            _html.append(searchImg);
-            _html.css("float","right");
-            $("label",_html).remove();
+			var _html = $(".dataTables_filter", tableWrapper);
+			var searchBox = $(".form-control", _html);
+			searchBox.attr("placeholder", "筛选");
+			var searchImg = '<span class="input-group-addon"><i class="fa fa-search" style="float: right;"></i></span>';
+			_html.addClass("input-group");
+			_html.append(searchBox);
+			_html.append(searchImg);
+			_html.css("float", "right");
+			$("label", _html).remove();
         },
-
-        submitFilter: function() {
-            the.setAjaxParam("action", tableOptions.filterApplyAction);
-
-            // get all typeable inputs
-            $('textarea.form-filter, select.form-filter, input.form-filter:not([type="radio"],[type="checkbox"])', table).each(function() {
-                the.setAjaxParam($(this).attr("name"), $(this).val());
-            });
-
-            // get all checkboxes
-            $('input.form-filter[type="checkbox"]:checked', table).each(function() {
-                the.addAjaxParam($(this).attr("name"), $(this).val());
-            });
-
-            // get all radio buttons
-            $('input.form-filter[type="radio"]:checked', table).each(function() {
-                the.setAjaxParam($(this).attr("name"), $(this).val());
-            });
-
-            dataTable.ajax.reload();
+        
+        hideFilters: function() {
+        	$(".dataTables_filter", tableWrapper).remove();
         },
+        
 
-        resetFilter: function() {
-            $('textarea.form-filter, select.form-filter, input.form-filter', table).each(function() {
-                $(this).val("");
-            });
-            $('input.form-filter[type="checkbox"]', table).each(function() {
-                $(this).attr("checked", false);
-            });
-            the.clearAjaxParams();
-            the.addAjaxParam("action", tableOptions.filterCancelAction);
-            dataTable.ajax.reload();
-        },
+//        submitFilter: function() {
+//            the.setAjaxParam("action", tableOptions.filterApplyAction);
+//
+//            // get all typeable inputs
+//            $('textarea.form-filter, select.form-filter, input.form-filter:not([type="radio"],[type="checkbox"])', table).each(function() {
+//                the.setAjaxParam($(this).attr("name"), $(this).val());
+//            });
+//
+//            // get all checkboxes
+//            $('input.form-filter[type="checkbox"]:checked', table).each(function() {
+//                the.addAjaxParam($(this).attr("name"), $(this).val());
+//            });
+//
+//            // get all radio buttons
+//            $('input.form-filter[type="radio"]:checked', table).each(function() {
+//                the.setAjaxParam($(this).attr("name"), $(this).val());
+//            });
+//
+//            dataTable.ajax.reload();
+//        },
+//
+//        resetFilter: function() {
+//            $('textarea.form-filter, select.form-filter, input.form-filter', table).each(function() {
+//                $(this).val("");
+//            });
+//            $('input.form-filter[type="checkbox"]', table).each(function() {
+//                $(this).attr("checked", false);
+//            });
+//            the.clearAjaxParams();
+//            the.addAjaxParam("action", tableOptions.filterCancelAction);
+//            dataTable.ajax.reload();
+//        },
 
         getSelectedRowsCount: function() {
             return $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
         },
+        
+        setSelectedSingleRow(index) {
+        	var idx = 0;
+            $('tbody > tr', table).each(function() {
+            	if (index == idx){
+            		 $(this).addClass('selected');
+            	} else  if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                } 
+            	idx += 1;
+            });
+        },
 
+        getSelectedSingleRow: function() {
+            var row;
+            var data = dataTable.rows().data();
+            var rowDataMap = {};
+            if(data){
+                if(data && data.length > 0){
+                	for(var i = 0 ; i < data.length; i++){
+                		var key = data[i][tableOptions.idField];
+                		if(key){
+                			rowDataMap[key] = data[i];
+                		}
+                	}
+                }
+            }
+            
+            $('tbody > tr.selected', table).each(function() {
+            	row = rowDataMap[this.id];
+            	return;
+            });
+
+            return row;
+        },
+        
         getSelectedRows: function() {
-            var rows = [];
+        	var rows = [];
             var data = dataTable.rows().data();
             var rowDataMap = {};
             if(data){
@@ -267,10 +309,13 @@ var Datatable = function() {
             		rows.push(rowDataMap[$(this).val()]);
             	}
             });
-
             return rows;
         },
-
+        
+        setAjaxFinishCallback: function(callback){
+        	ajaxFinishCallback = callback;
+        },
+        
         setAjaxParam: function(name, value) {
             ajaxParams[name] = value;
         },
@@ -329,3 +374,28 @@ var Datatable = function() {
     };
 
 };
+
+function showLoading() {
+	var html = "<img src=\"" + contextPath + "/assets/images/loading.gif\" style=\"padding:0; border:0;margin:0;\" width=\"32\" height=\"32\"/>"
+	html = "<div class=\"modal fade bs-modal-lg\" id=\"__loading_div__\">\n\t" + html + "\n</div>"
+	
+	var width = $(window).width();
+	var height = $(window).height();
+	var top = height/2 - 16;
+	var left = width/2 - 16;
+	
+	$("#__loading_div__").remove();
+	$("body").append(html);
+	$("#__loading_div__").css({ position:'absolute',  top: '0px', left: '0px', width: $(window).width() + 'px', textAlign: 'left'});
+	$("#__loading_div__ img").css({ position:'absolute',  top: top + 'px', left: left + 'px', width: '32px', textAlign: 'left'});
+	
+	$("#__loading_div__").modal('show');
+}
+
+function closeLoading() {
+	$("#__loading_div__").empty();
+	$("#__loading_div__").modal('hide');
+	$("#__loading_div__").remove();
+	$(".modal-backdrop.fade.in").remove();
+	
+}

@@ -10,6 +10,7 @@ import java.util.List;
 public interface IHostGroupService {
     List<HostGroup> queryAll();
     HostGroup queryOne(String id);
+    HostGroup queryByName(String groupName);
     String add(HostGroup hostGroup);
     void update(HostGroup hostGroup);
     void delete(String id);

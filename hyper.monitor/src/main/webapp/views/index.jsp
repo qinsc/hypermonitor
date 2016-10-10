@@ -14,16 +14,17 @@
 	<!-- Bootstrap Styles-->
 	<link href="../assets/css/bootstrap.css" rel="stylesheet" />
 	<!-- FontAwesome Styles-->
-	<link href="../assets/css/font-awesome.css" rel="stylesheet" />
+	<link href="../assets/css/font-awesome.min.css" rel="stylesheet" />
 	<!-- Custom Styles-->
 	<link href="../assets/css/custom-styles.css" rel="stylesheet" />
 	<!-- Datatables  Styles -->
 	<link href="../assets/css/dataTables.bootstrap.css" rel="stylesheet" />
 	<!-- datatables button -->
 	<link href="../assets/css/buttons.bootstrap.min.css" rel="stylesheet" />
-	<link href="../assets/css/buttons.dataTables.min.css rel="stylesheet" />
+	<link href="../assets/css/buttons.dataTables.min.css" rel="stylesheet" />
+	<link href="../assets/css/dataTables.customLoader.walker.css" rel="stylesheet" />
 	
-	<%@include file="common/common.jsp"%>
+	<%@include file="common/common.jsp"%>	
 	
 </head>
 

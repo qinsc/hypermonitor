@@ -75,7 +75,12 @@
 	</delete>
 
 	<select id="queryAll" resultMap="HostMap">
-		select * from HM_HOST order by HOST_NAME desc
+		select 
+			H.*, 
+			HG.GROUP_NAME as "groupName"
+		from HM_HOST as H 
+			left join HM_HOST_GROUP as HG on H.GROUP_ID=HG.GROUP_ID 
+			order by H.MANAGE_IP asc
 	</select>
 
 	<select id="queryOne" resultMap="HostMap" parameterType="java.lang.String">

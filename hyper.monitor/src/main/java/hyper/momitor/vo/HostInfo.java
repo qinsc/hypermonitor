@@ -14,6 +14,7 @@ public class HostInfo {
 	private int online; // 0 为离线，1为在线
 	private String hostName;
 	private String manageIp;
+	private String hostGroup;
 	private String os;
 	private String desc;
 
@@ -26,6 +27,7 @@ public class HostInfo {
 		this.desc = host.getDesc();
 		this.os = host.getOs();
 		this.manageIp = host.getManageIp();
+		this.hostGroup = host.getGroupName();
 	}
 
 	/**
@@ -118,17 +120,18 @@ public class HostInfo {
 		this.desc = desc;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
+	/**
+	 * @return the hostGroup
 	 */
-	@Override
-	public String toString() {
-		return "HostInfo [" + (hostId != null ? "hostId=" + hostId + ", " : "") + "online=" + online + ", "
-				+ (hostName != null ? "hostName=" + hostName + ", " : "")
-				+ (manageIp != null ? "manageIp=" + manageIp + ", " : "") + (os != null ? "os=" + os + ", " : "")
-				+ (desc != null ? "desc=" + desc + ", " : "") + "]";
+	public String getHostGroup() {
+		return hostGroup;
+	}
+
+	/**
+	 * @param hostGroup the hostGroup to set
+	 */
+	public void setHostGroup(String hostGroup) {
+		this.hostGroup = hostGroup;
 	}
 
 }

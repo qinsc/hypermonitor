@@ -1,14 +1,16 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<div class="row">
+<%@include file="../common/common.jsp"%>
+
+<div class="row" id="numbers">
 	<div class="col-md-3 col-sm-12 col-xs-12">
 		<div
 			class="panel panel-primary text-center no-boder bg-color-green green">
 			<div class="panel-left pull-left green">
-				<i class="fa fa-bar-chart-o fa-5x"></i>
+				<i class="fa fa-server fa-5x"></i>
 
 			</div>
 			<div class="panel-right pull-right">
-				<h3>8,457</h3>
+				<h3 id="hosts">0</h3>
 				<strong> 主机总数 </strong>
 			</div>
 		</div>
@@ -17,11 +19,11 @@
 		<div
 			class="panel panel-primary text-center no-boder bg-color-blue blue">
 			<div class="panel-left pull-left blue">
-				<i class="fa fa-shopping-cart fa-5x"></i>
+				<i class="fa fa-check-square-o fa-5x"></i>
 			</div>
 
 			<div class="panel-right pull-right">
-				<h3>52,160</h3>
+				<h3 id="onlineHosts">0</h3>
 				<strong> 在线主机数 </strong>
 
 			</div>
@@ -30,11 +32,11 @@
 	<div class="col-md-3 col-sm-12 col-xs-12">
 		<div class="panel panel-primary text-center no-boder bg-color-red red">
 			<div class="panel-left pull-left red">
-				<i class="fa fa fa-comments fa-5x"></i>
+				<i class="fa fa fa-clone fa-5x"></i>
 
 			</div>
 			<div class="panel-right pull-right">
-				<h3>15,823</h3>
+				<h3 id="hostGroups">0</h3>
 				<strong> 主机组数 </strong>
 
 			</div>
@@ -44,11 +46,10 @@
 		<div
 			class="panel panel-primary text-center no-boder bg-color-brown brown">
 			<div class="panel-left pull-left brown">
-				<i class="fa fa-users fa-5x"></i>
-
+				<i class="fa fa-tags fa-5x"></i>
 			</div>
 			<div class="panel-right pull-right">
-				<h3>36,752</h3>
+				<h3 id="hostTags">0</h3>
 				<strong>主机标签数</strong>
 
 			</div>
@@ -130,8 +131,13 @@
 	</div>
 </div>
 
+<script src="<%=contextPath%>/assets/js/dt.js"></script> 
+<script src="<%=contextPath%>/views/dashboard/js/dashboard.js"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
-		initDatatables("eventTable");
+		var contextPath = "<%=contextPath%>";
+		initEventDatatables(contextPath, "eventTable"); 
+		loadNumbers();
+		loadEvents();
 	});
 </script>

@@ -3,10 +3,10 @@ package hyper.momitor.client;
 import java.util.List;
 import java.util.Map;
 
+import hyper.momitor.model.Host;
 import hyper.momitor.util.MonitorUtil;
 import hyper.momitor.util.etcd.HMEtcdClient;
 import hyper.momitor.util.etcd.HMEtcdClientFactory;
-import hyper.momitor.util.etcd.HMEtcdException;
 import hyper.momitor.vo.HostInfo;
 
 public class EtcdClient {
@@ -46,5 +46,25 @@ public class EtcdClient {
 			}
 		}
 	}
-
+	
+	public int getOnlineHostsNumber(List<Host> hosts) {
+		Map<String,String> kvs  = null;
+		
+		try {
+			kvs = getEtcdClient().list(KEY_PRE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int number = 0;
+		if (kvs != null) {
+			for (Host host : hosts) {
+				if (kvs.get(KEY_PRE + host.getHostId()) != null) {
+					number++;
+				}
+			}
+		}
+		
+		return number;
+	}
 }

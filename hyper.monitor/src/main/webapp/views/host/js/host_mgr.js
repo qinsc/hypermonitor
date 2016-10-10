@@ -28,81 +28,68 @@ function initHostDatatables(ctxPath, tableId){
         src: $("#"+tableId),
         idField:"hostId",
         dataTable: {
-        	dom: 'fBrtip',
+        	dom: 'ftip',
             "ajax": {
             	 url:contextPath+"/rest/hosts/",
             	 type:"GET"
              }, 
              "processing": true,
              "pageLength": 10,
-             buttons: [ 
-                  {
-		              text: '注销',
-		              action: function ( e, dt, node, config ) {
-		            	  osLogout();
-		              }
-		          },
-		          {
-		              text: '关机',
-		              action: function ( e, dt, node, config ) {
-		            	  osShutdown();
-		              }
-		          },
-		          {
-		              text: '重启',
-		              action: function ( e, dt, node, config ) {
-		            	  osReboot();
-		              }
-		          },
-		          {
-		              text: '发送消息',
-		              action: function ( e, dt, node, config ) {
-		            	  sendMsg();
-		              }
-		          },
-		          {
-		              text: '添加主机',
-		              action: function ( e, dt, node, config ) {
-		            	  addHosts();
-		              }
-		          } ,
-		          {
-		              text: '移除主机',
-		              action: function ( e, dt, node, config ) {
-		            	  removeHosts();
-		              }
-		          } 
-		          
-		          ],
              "columns":[
                  {"data":"check"},
-                 {"data" : "online", "render" : function(data, type, full, meta) {
+                 {"data" : "online", "orderable": true, "render" : function(data, type, full, meta) {
                 	 return data == 1?'<h style="color:green;">在线<h>':'<h style="color: red;">离线<h>';
         		 }},  
-                 {"data" : "hostName","render" : function(data, type, full, meta) {
+                 {"data" : "hostName","orderable": true, "render" : function(data, type, full, meta) {
                 	 return '<a id="'+full.hostId+'" href="#" onclick="toShowHostDetail(this)">'+data+'</a>';
         		 }},
                  {"data" : "manageIp"},  
         		 {render: function(data, type, full, meta) {
         			 var remoteCtlHtml =  
-	        			'<div class="btn-group" style="min-width:90px;">                                                                                                           ' +
-	        			'  <button type="button" class="btn btn-success" id="'+full.hostId+'" onclick="vnc(this)">VNC</button>      						   ' +
+	        			'<div class="btn-group" style="min-width:90px;">                                                                                  ' +
+	        			'  <button type="button" class="btn btn-success" id="'+full.hostId+'" onclick="vnc(this)">VNC</button>      					   ' +
 	        			'  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> ' +
 	        			'    <span class="caret"></span>                                                                                                   ' +
 	        			'    <span class="sr-only">Toggle Dropdown</span>                                                                                  ' +
 	        			'  </button>                                                                                                                       ' +
-	        			'  <ul class="dropdown-menu" style="background-color: #5cb85c; min-width: 90px;">                                                                                                      ' +
-	        			'    <li><a id="'+full.hostId+'" style="background-color: #5cb85c; font-size: 14px; color: #fff;" onclick="rdp(this)">RDP</a></li>                                                			   ' +
+	        			'  <ul class="dropdown-menu" style="background-color: #5cb85c; min-width: 90px;">                                                ' +
+	        			'    <li><a id="'+full.hostId+'" style="background-color: #5cb85c; font-size: 14px; color: #fff;" onclick="rdp(this)">RDP</a></li> ' +
 	        			'  </ul>                                                                                                                           ' +
 	        			'</div>';
         			 return remoteCtlHtml;
         		 }},
                  {"data" : "os", "orderable": false},  
+                 {"data" : "hostGroup", "orderable": true},  
                  {"data" : "desc", "orderable": false},  
                  { render: render_host_operations, "orderable":false} 
              ],
         }
     });
+	hostGrid.hideFilters();
+	
+	$.fn.dataTable.ext.search.push(
+		    function( settings, data, dataIndex ) {
+		    	var searchText = $("#searchText").val();
+		    	if (searchText==""){
+		        	return true;
+		        }
+		    	  
+		        var hostName = data[2]; // use data for the age column
+		        var ip = data[3];
+		        var group = data[6];
+		        if (hostName.indexOf(searchText) != -1
+		        		|| ip.indexOf(searchText) != -1 
+		        		|| group.indexOf(searchText) != -1){
+		        	return true;
+		        }
+		 
+		        return false;
+		    }
+		);
+    // Event listener to the two range filtering inputs to redraw on input
+    $('#searchText').keyup( function() {
+    	hostGrid.getDataTable().draw();
+    } );
 }
 
 var addHostGrid = new Datatable();
@@ -112,17 +99,50 @@ function initAddHostDatatables(tableId){
         idField:"hostId",
         dataTable: {
         	dom: 'rtip',
-// "ajax": {
-// url:contextPath+"/rest/hosts/",
-// type:"GET"
-// },
-        	 "processing": false,
+        	"processing": true,
+        	"deferLoading": 0,
              "pageLength": 5,
              "columns":[
                  {"data":"check"},
                  {"data" : "hostName"},  
                  {"data" : "manageIp"},  
              ],
+        }
+    });
+	addHostGrid.setAjaxFinishCallback(function(){
+    	$("#addHostsModal #btn_scan").removeProp("disabled");
+    	$("#addHostsModal #btn_add_hosts").removeProp("disabled");
+	});
+}
+
+var hostGroupEditGrid = new Datatable();
+function initHostGroupEditDatatables(){
+	hostGroupEditGrid.init({
+        src: $("#hostGroupEditTable"),
+        idField:"groupId",
+        dataTable: {
+        	 dom: 'rtip',
+        	 "processing": true,
+             "pageLength": 5,
+             showCheckBox: false,
+             "deferLoading": 0,
+             "ajax": {
+            	 url:contextPath+"/rest/hostgroups/",
+            	 type:"GET"
+             }, 
+             "columns":[
+                 {"data" : "groupName","orderable": true},  
+                 {"data" : "groupDesc", "orderable": false}  
+             ],
+        }
+    });
+	
+	$('#hostGroupEditTable tbody').on( 'click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        } else {
+        	hostGroupEditGrid.getDataTable().$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
         }
     });
 }
@@ -174,67 +194,6 @@ function rdp(row){
 	window.open(contextPath+"/views/host/guacd.jsp?protocol=rdp&hostIp=" + host.manageIp);
 }
 
-//function showHostDetail(detialInfo){
-//	$("#detailHostsModal #detailHostsModalLabel").text("主机详情");
-//	
-//	$("#detailHostsModal #hostName").html(detialInfo.hostName); 
-//	$("#detailHostsModal #hostDesc").html(detialInfo.desc); 
-//	
-//	$("#detailHostsModal #bootTime").html(getLocalTime(detialInfo.bootTime/1000)); 
-//	$("#detailHostsModal #upTime").html(getDateDiff(detialInfo.upTime/1000)); 
-//	
-//	$("#detailHostsModal #os").html(detialInfo.os); 
-//	$("#detailHostsModal #osPlatform").html(detialInfo.osPlatform); 
-//	$("#detailHostsModal #osPlatformFamily").html(detialInfo.osPlatformFamily); 
-//	$("#detailHostsModal #osPlatformVersion").html(detialInfo.osPlatformVersion); 
-//	
-//	$("#detailHostsModal #cpuCores").html(detialInfo.cpuCores); 
-//	$("#detailHostsModal #cpuModelName").html(detialInfo.cpuModelName); 
-//	$("#detailHostsModal #cpuMhz").html(detialInfo.cpuMhz); 
-//	$("#detailHostsModal #cpuUsage").html(detialInfo.cpuUsage); 
-//	
-//	$("#detailHostsModal #memSize").html(detialInfo.memSize); 
-//	$("#detailHostsModal #memUsed").html(detialInfo.memUsed); 
-//	$("#detailHostsModal #memUsage").html(detialInfo.memUsage); 
-//	
-//	$("#detailHostsModal #nics").empty();
-//	$("#detailHostsModal #nics").append($("<legend>网卡</legend>").get(0));  
-//	$.each(detialInfo.nicInfos, function(i, val){
-//		var nic = 
-//			'<dl class="dl-horizontal">' +
-//			'  <dt>网卡名称</dt> ' +
-//			'  <dd>' + val.nicName + '</dd>'+						  
-//			'  <dt>网卡IP地址</dt> ' +
-//			'  <dd>' + val.ip + '</dd>'	 +			  
-//			'  <dt>网卡物理地址</dt> ' +
-//			'  <dd>' + val.mac + '</dd>'	 +			  
-//			'</dl> ';
-//		$("#detailHostsModal #nics").append($(nic).get(0));
-//	});
-//	
-//	$("#detailHostsModal #disks").empty();
-//	$("#detailHostsModal #disks").append($("<legend>硬盘</legend>").get(0));  
-//	$.each(detialInfo.diskInfos, function(i, val){
-//		var disk = 
-//			'<dl class="dl-horizontal">' +
-//			'  <dt>硬盘</dt> ' +
-//			'  <dd>' + val.path + '</dd>'+						  
-//			'  <dt>设备路径</dt> ' +
-//			'  <dd>' + val.device + '</dd>'	 +			  
-//			'  <dt>文件系统类型</dt> ' +
-//			'  <dd>' + val.fsType + '</dd>'	 +			  
-//			'  <dt>总大小</dt> ' +
-//			'  <dd>' + val.diskSize + '</dd>'	 +			  
-//			'  <dt>已使用</dt> ' +
-//			'  <dd>' + val.diskUsed + '</dd>'	 +			  
-//			'  <dt>使用率</dt> ' +
-//			'  <dd>' + val.usedPercent + '</dd>' +			  
-//			'</dl> ';
-//		$("#detailHostsModal #disks").append($(disk).get(0));
-//	});
-//	
-//    $('#detailHostsModal').modal({keyboard:false,show:true});
-//}
 
 function doOsOpertaion(row, opt){
 	var hostIds = getselectHostIds(row);
@@ -276,8 +235,11 @@ function removeHosts(row){
 		$.messager.alert("提示", "请选择要操作的主机");
 		return;
 	}
+	
 	$.messager.confirm("确认", "确定要移除所选机器吗？", function() { 
 		var url = contextPath+"/rest/hosts/remove";
+		
+		showLoading();
 		
 		$.ajax({
 			url: url,
@@ -286,9 +248,11 @@ function removeHosts(row){
 			data:JSON.stringify(hostIds),
 			success: function(ret){
 				$.messager.alert("消息", "主机移除成功");
+				closeLoading();
 				hostGrid.reload();
 			},
 			error: function(ret){
+				closeLoading();
 				$.messager.alert("消息", "主机移除失败");
 			}
 		});
@@ -328,7 +292,30 @@ function addHostDesc(row) {
 function addHosts() {
 	$("#addHostsModal #addHostsModalLabel").text("添加主机"); 
 	
+	$("#addHostsModal #btn_scan").removeProp("disabled");
+	$("#addHostsModal #btn_add_hosts").removeProp("disabled");
+	addHostGrid.getDataTable().clear().draw();
+	
     $('#addHostsModal').modal({keyboard:false,show:true});
+}
+
+function editGroup(){
+	var hostIds = getselectHostIds();
+	if (hostIds.length == 0){
+		$.messager.alert("提示", "请选择要操作的主机");
+		return;
+	}
+	
+	hostGroupEditGrid.setAjaxFinishCallback(function(){
+		hostGroupEditGrid.setSelectedSingleRow(0);
+	});
+	
+	hostGroupEditGrid.reload();
+    $('#hostGroupEditModal').modal({keyboard:false,show:true});
+}
+
+function mgrGroup(){
+	alert("Mgr Group");
 }
 
 function getselectHostIds(row){
@@ -344,13 +331,32 @@ function getselectHostIds(row){
 	return hostIds;
 }
 
-function checkIp(ip){
-	return true;
-}
-
-function checkIpRange(startIp, endIp){
-	return true;
-}
+$(document).delegate("#hostGroupEditModal  #btn_add_hosts_group","click",function(){
+	var selectedGroup = hostGroupEditGrid.getSelectedSingleRow();
+	if (selectedGroup != null) {
+		var hostIds = getselectHostIds();
+		if (hostIds.length == 0){
+			$.messager.alert("提示", "请选择要操作的主机");
+			return;
+		}
+		
+		$.messager.confirm("确认", "确定要将主机组修改为" + selectedGroup.groupName + "吗?", function() { 
+			$.ajax({
+				url: contextPath+"/rest/hosts/"，
+				type: "post",
+				contentType: "application/json",
+				data:JSON.stringify(data),
+				success: function(ret){
+					$('#hostGroupEditModal').modal("hide");
+					hostGrid.reload();
+				},
+				error: function(ret){
+					$.messager.alert("消息", "主机组修改失败");
+				}
+			});
+		});
+	}
+});
 
 $(document).delegate("#myModal  #btn_action","click",function(){
 	var opt = $("#myModal #opt").val();
@@ -394,7 +400,6 @@ $(document).delegate("#myModal  #btn_action","click",function(){
 			contentType: "application/json",
 			data:JSON.stringify(data),
 			success: function(ret){
-				// $.messager.alert("消息", message+"成功");
 				$('#myModal').modal("hide");
 				hostGrid.reload();
 			},
@@ -405,7 +410,7 @@ $(document).delegate("#myModal  #btn_action","click",function(){
 	});
 });
 
-$(document).delegate("#addHostsModal  #btn_scan","click",function(){
+$(document).delegate("#addHostsModal #btn_scan","click",function(){
 	var startIp = $("#addHostsModal #startIp").val();
 	var endIp = $("#addHostsModal #endIp").val();
 	
@@ -422,6 +427,10 @@ $(document).delegate("#addHostsModal  #btn_scan","click",function(){
 	if (isCIDR(startIp) && isCIDR(endIp)){
 		startIp = startIp.replace("/",":");
 		endIp = endIp.replace("/",":");
+		
+		$("#addHostsModal #btn_scan").prop({"disabled":"disabled"});
+		$("#addHostsModal #btn_add_hosts").prop({"disabled":"disabled"});
+		
 		addHostGrid.reload(contextPath+"/rest/hosts/scan/"+startIp+"/"+endIp);
 	}
 });
@@ -437,17 +446,21 @@ $(document).delegate("#addHostsModal #btn_add_hosts","click",function(){
 	$.each(selectedHosts,function(i,val){
 		hosts.push({hostId: val.hostId, manageIp: val.manageIp, hostName: val.hostName});
 	});
+	
+	$('#addHostsModal').modal("hide");
+	showLoading();
+	
 	$.ajax({
 		url: contextPath+"/rest/hosts",
 		type: "put",
 		contentType: "application/json",
 		data:JSON.stringify(hosts),
 		success: function(ret){
-			// $.messager.alert("消息", message+"成功");
-			$('#addHostsModal').modal("hide");
+			closeLoading();
 			hostGrid.reload();
 		},
 		error: function(ret){
+			closeLoading();
 			$.messager.alert("消息", message+"失败");
 		}
 	});

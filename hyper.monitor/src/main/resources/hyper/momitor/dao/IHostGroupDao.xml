@@ -41,5 +41,9 @@
 	<select id="queryOne" resultMap="HostGroupMap" parameterType="java.lang.String">
 		select * from HM_HOST_GROUP where GROUP_ID = #{groupId, jdbcType=VARCHAR}
 	</select>
+	
+	<select id="queryByName" resultMap="HostGroupMap" parameterType="java.lang.String">
+		select * from HM_HOST_GROUP where GROUP_NAME = #{groupName, jdbcType=VARCHAR}
+	</select>
 
 </mapper>

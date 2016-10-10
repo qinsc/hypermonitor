@@ -4,6 +4,8 @@
 package hyper.momitor.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +48,8 @@ public class HostController {
 	private Logger log = Logger.getLogger(HostController.class);
 	private IHostService hostService = (IHostService) SpringUtil.getBean("hostService");
 
-	private HMHostClient hMHostClient = new HMHostClient();
-	private EtcdClient hMEtcdClient = new EtcdClient();
+	private final HMHostClient hMHostClient = new HMHostClient();
+	private final EtcdClient hMEtcdClient = new EtcdClient();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -60,6 +62,7 @@ public class HostController {
 				hostInfos.add(new HostInfo(host));
 			}
 		}
+		
 		hMEtcdClient.checkHostsOnline(hostInfos);
 		Map<String, Object> result = new HashMap<>();
 		result.put("data", hostInfos);
@@ -90,44 +93,37 @@ public class HostController {
 
 		long t = System.currentTimeMillis();
 		final List<HostInfo> hostInfos = new ArrayList<>();
-		System.out.println("hostInfos = " + hostInfos.hashCode());
 		List<String> ips = hMHostClient.getIPs(startIpMask, endIpMask);
 		if (ips != null) {
-			ExecutorService pool = Executors.newFixedThreadPool(20);
+			ThreadPoolRunner runner = new ThreadPoolRunner();
 			for (String ip : ips) {
-				pool.submit(new Runnable() {
+				runner.submit(new Runnable() {
 					public void run() {
 						long t1 = System.currentTimeMillis();
-						System.out.println("Scan host: " + ip);
-						HostConfig config = hMHostClient.getHostConfig(ip, 5000);	// 超时时间5秒
+						log.info("Scan host: " + ip);
+						HostConfig config = hMHostClient.getHostConfig(ip, 5000); // 超时时间5秒
 						if (config != null) {
-							if (config.getMonitor() == null) {
-								System.out.println("hostInfos = " + hostInfos.hashCode());
-								HostInfo hostInfo = new HostInfo();
-								hostInfo.setHostId(UUID.randomUUID().toString());
-								hostInfo.setHostName(config.getHostName());
-								hostInfo.setManageIp(ip);
-								hostInfos.add(hostInfo);
-								System.out.println("Add host: " + ip);
-							}
+							// if (config.getMonitor() == null) {
+							HostInfo hostInfo = new HostInfo();
+							hostInfo.setHostId(UUID.randomUUID().toString());
+							hostInfo.setHostName(config.getHostName());
+							hostInfo.setManageIp(ip);
+							hostInfos.add(hostInfo);
+							log.info("Add host: " + ip);
+							// }
 						}
-						System.out.println("Scan host " + ip + " cost: " + (System.currentTimeMillis() - t1)/1000 + "s");
+						log.info("Scan host " + ip + " cost: " + (System.currentTimeMillis() - t1) / 1000 + "s");
 					}
 				});
 			}
-			
-			pool.shutdown();
-			try {
-				pool.awaitTermination(5,TimeUnit.MINUTES);
-			} catch (InterruptedException e) {
-				System.out.println("await error  ...");
-			}
-			System.out.println("finish ... ");
+			runner.waitForFinish();
+			log.info("finish ... ");
 		}
-		System.out.println("Scan " + startIpMask + " -> " + endIpMask + " cost :" + (System.currentTimeMillis() - t)/1000 + " s");
+		log.info("Scan " + startIpMask + " -> " + endIpMask + " cost :"
+				+ (System.currentTimeMillis() - t) / 1000 + " s");
 
 		Map<String, Object> result = new HashMap<>();
-		System.out.println("Size: " + hostInfos.size());
+		log.info("Size: " + hostInfos.size());
 		result.put("data", hostInfos);
 		return result;
 	}
@@ -138,13 +134,22 @@ public class HostController {
 	public void osLogoff(List<String> hostIds) throws HMException {
 		log.info("do logout for hosts: " + hostIds);
 		if (hostIds != null) {
+			ThreadPoolRunner runner = new ThreadPoolRunner();
 			for (String hostId : hostIds) {
-				Host host = hostService.queryOne(hostId);
-				if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
-					hMHostClient.osLogoff(host.getManageIp());
-				} else {
-					log.error("Host for id[" + hostId + "] not online.");
-				}
+				runner.submit(new Runnable() {
+					public void run() {
+						Host host = hostService.queryOne(hostId);
+						if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
+							try {
+								hMHostClient.osLogoff(host.getManageIp());
+							} catch (HMException e) {
+							}
+						} else {
+							log.error("Host for id[" + hostId + "] not online.");
+						}
+					}
+				});
+				runner.waitForFinish();
 			}
 		}
 	}
@@ -155,14 +160,24 @@ public class HostController {
 	public void osShutdown(List<String> hostIds) throws HMException {
 		log.info("do shutdown hosts: " + hostIds);
 		if (hostIds != null) {
+			ThreadPoolRunner runner = new ThreadPoolRunner();
 			for (String hostId : hostIds) {
-				Host host = hostService.queryOne(hostId);
-				if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
-					hMHostClient.osShutdown(host.getManageIp());
-				} else {
-					log.error("Host for id[" + hostId + "] not online.");
-				}
+				runner.submit(new Runnable() {
+					public void run() {
+						Host host = hostService.queryOne(hostId);
+						if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
+							try {
+								hMHostClient.osShutdown(host.getManageIp());
+							} catch (HMException e) {
+								log.error(e.getMessage());
+							}
+						} else {
+							log.error("Host for id[" + hostId + "] not online.");
+						}
+					}
+				});
 			}
+			runner.waitForFinish();
 		}
 	}
 
@@ -172,14 +187,24 @@ public class HostController {
 	public void osReboot(List<String> hostIds) throws HMException {
 		log.info("do reboot hosts: " + hostIds);
 		if (hostIds != null) {
+			ThreadPoolRunner runner = new ThreadPoolRunner();
 			for (String hostId : hostIds) {
-				Host host = hostService.queryOne(hostId);
-				if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
-					hMHostClient.osReboot(host.getManageIp());
-				} else {
-					log.error("Host for id[" + hostId + "] not online.");
-				}
+				runner.submit(new Runnable() {
+					public void run() {
+						Host host = hostService.queryOne(hostId);
+						if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
+							try {
+								hMHostClient.osReboot(host.getManageIp());
+							} catch (HMException e) {
+								log.error(e.getMessage());
+							}
+						} else {
+							log.error("Host for id[" + hostId + "] not online.");
+						}
+					}
+				});
 			}
+			runner.waitForFinish();
 		}
 	}
 
@@ -189,14 +214,24 @@ public class HostController {
 	public void sendMessage(HostsMessage hostsMessage) throws HMException {
 		log.info("send message to hosts: " + hostsMessage);
 		if (hostsMessage != null && hostsMessage.getMessage() != null && hostsMessage.getHostIds() != null) {
+			ThreadPoolRunner runner = new ThreadPoolRunner();
+
 			for (String hostId : hostsMessage.getHostIds()) {
-				Host host = hostService.queryOne(hostId);
-				if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
-					hMHostClient.sendMessage(host.getManageIp(), hostsMessage.getMessage());
-				} else {
-					log.error("Host for id[" + hostId + "] not online.");
-				}
+				runner.submit(new Runnable() {
+					public void run() {
+						Host host = hostService.queryOne(hostId);
+						if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
+							try {
+								hMHostClient.sendMessage(host.getManageIp(), hostsMessage.getMessage());
+							} catch (HMException e) {
+							}
+						} else {
+							log.error("Host for id[" + hostId + "] not online.");
+						}
+					}
+				});
 			}
+			runner.waitForFinish();
 		}
 	}
 
@@ -217,14 +252,38 @@ public class HostController {
 	public void addHosts(List<HostInfo> hostInfos) throws HMException {
 		log.info("add hosts: " + hostInfos);
 		if (hostInfos != null) {
-			for (HostInfo hostInfo : hostInfos) {
-				HostDetailInfo detailInfo = hMHostClient.addHost(hostInfo);
-				if (detailInfo != null) {
-					Host host = ModelHelper.toHost(detailInfo);
-					host.setHostId(hostInfo.getHostId());
-					host.setManageIp(hostInfo.getManageIp());
-					hostService.add(host);
+			// Get all manage ips
+			List<Host> hosts = hostService.queryAll();
+			List<String> manageIps = new ArrayList<>();
+			if (hosts != null) {
+				for (Host host : hosts) {
+					manageIps.add(host.getManageIp());
 				}
+			}
+
+			ThreadPoolRunner runner = new ThreadPoolRunner();
+			for (HostInfo hostInfo : hostInfos) {
+				if (!manageIps.contains(hostInfo.getManageIp())) {
+					runner.submit(new Runnable() {
+						public void run() {
+							log.info("Add host: " + hostInfo.getManageIp());
+							HostDetailInfo detailInfo = null;
+							try {
+								detailInfo = hMHostClient.addHost(hostInfo);
+							} catch (HMException e) {
+								log.error(e.getMessage());
+							}
+
+							if (detailInfo != null) {
+								Host host = ModelHelper.toHost(detailInfo);
+								host.setHostId(hostInfo.getHostId());
+								host.setManageIp(hostInfo.getManageIp());
+								hostService.add(host);
+							}
+						}
+					});
+				}
+				runner.waitForFinish();
 			}
 		}
 	}
@@ -237,7 +296,7 @@ public class HostController {
 		if (hostIds != null) {
 			for (String hostId : hostIds) {
 				Host host = hostService.queryOne(hostId);
-				if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
+				if (host != null) {
 					hMHostClient.removeHost(host);
 				}
 				hostService.delete(host.getHostId());
@@ -252,43 +311,38 @@ public class HostController {
 		Host host = hostService.queryOne(hostId);
 		if (host != null && hMEtcdClient.getHostOnline(hostId) == 1) {
 			String info = new Gson().toJson(hMHostClient.getHostDetailInfo(host.getManageIp()));
-			System.out.println("info json =" + info);
-			return info;  
+			log.info("info json =" + info);
+			return info;
 		}
-		throw new HMException("主机不存在");
+		throw new HMException("主机信息获取失败");
 	}
-	
-//	public static void main(String[] args) {
-//		ExecutorService pool = Executors.newCachedThreadPool();
-//		for (int i = 0; i < 30; i++) {
-//			final int n = i;
-//			pool.execute(new Runnable() {
-//				public void run() {
-//					try {
-//						TimeUnit.MICROSECONDS.sleep(50);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					System.out.println(n);
-//				}
-//			});
-//		}
-//		
-//		while(true) {
-//			System.out.println("pool status = " + pool.aw);
-//			if (pool.isTerminated() || pool.isShutdown()) {
-//				break;
-//			}
-//			try {
-//				TimeUnit.SECONDS.sleep(1);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		
-//		pool.shutdown();
-//		System.out.println("finish");
-//	}
 
+	/**
+	 * 
+	 * @author qinscx
+	 *
+	 */
+	class ThreadPoolRunner {
+		private ExecutorService pool;
+
+		public ThreadPoolRunner() {
+			pool = Executors.newFixedThreadPool(20);
+		}
+
+		public ThreadPoolRunner(int poolSize) {
+			pool = Executors.newFixedThreadPool(poolSize);
+		}
+
+		public void submit(Runnable runner) {
+			pool.submit(runner);
+		}
+
+		public void waitForFinish() {
+			pool.shutdown();
+			try {
+				pool.awaitTermination(5, TimeUnit.MINUTES);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
 }

@@ -27,7 +27,7 @@ public class HMHostClient {
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	public void osLogoff(String manageId) throws HMException {
-		String url = "http://" + manageId + ":8080/rest/host/logoff";
+		String url = "http://" + manageId + ":8081/rest/gui/logoff";
 		try {
 			RestUtil.doPost(url, null, null);
 		} catch (Exception e) {
@@ -119,7 +119,7 @@ public class HMHostClient {
 			int index1 = allIpsList.indexOf(ip1);
 			int index2 = allIpsList.indexOf(ip2);
 			if (index2 >= index1) {
-				return allIpsList.subList(index1, index2);
+				return allIpsList.subList(index1, index2+1);
 			} 
 		}
 		return ips;

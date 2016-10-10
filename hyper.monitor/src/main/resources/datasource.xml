@@ -15,7 +15,7 @@
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
      	<property name="url" value="jdbc:mysql://localhost:3306/hypermonitor?characterEncoding=UTF-8&amp;useSSL=false"></property>
     	<property name="username" value="root"></property>  
-    	<property name="password" value="hypermonitor"></property>
+    	<property name="password" value="root"></property>
     	
     	<!-- 连接池启动时的初始值 -->  
     	<property name="initialSize" value="5" />  

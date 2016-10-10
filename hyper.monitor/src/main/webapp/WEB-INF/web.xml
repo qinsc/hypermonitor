@@ -11,7 +11,9 @@
 		<param-value>
 			hyper.momitor.controller.UserController,
 			hyper.momitor.controller.HostController,
-			hyper.momitor.controller.AgentController
+			hyper.momitor.controller.HostGroupController,
+			hyper.momitor.controller.AgentController,
+			hyper.momitor.controller.DashboardController
 		</param-value>
 	</context-param>
 	<context-param>
