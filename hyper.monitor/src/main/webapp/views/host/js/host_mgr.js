@@ -115,38 +115,6 @@ function initAddHostDatatables(tableId){
 	});
 }
 
-var hostGroupEditGrid = new Datatable();
-function initHostGroupEditDatatables(){
-	hostGroupEditGrid.init({
-        src: $("#hostGroupEditTable"),
-        idField:"groupId",
-        dataTable: {
-        	 dom: 'rtip',
-        	 "processing": true,
-             "pageLength": 5,
-             showCheckBox: false,
-             "deferLoading": 0,
-             "ajax": {
-            	 url:contextPath+"/rest/hostgroups/",
-            	 type:"GET"
-             }, 
-             "columns":[
-                 {"data" : "groupName","orderable": true},  
-                 {"data" : "groupDesc", "orderable": false}  
-             ],
-        }
-    });
-	
-	$('#hostGroupEditTable tbody').on( 'click', 'tr', function () {
-        if ( $(this).hasClass('selected') ) {
-            $(this).removeClass('selected');
-        } else {
-        	hostGroupEditGrid.getDataTable().$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-        }
-    });
-}
-
 function osLogout(row) {
 	doOsOpertaion(row, "注销");
 }
@@ -299,25 +267,6 @@ function addHosts() {
     $('#addHostsModal').modal({keyboard:false,show:true});
 }
 
-function editGroup(){
-	var hostIds = getselectHostIds();
-	if (hostIds.length == 0){
-		$.messager.alert("提示", "请选择要操作的主机");
-		return;
-	}
-	
-	hostGroupEditGrid.setAjaxFinishCallback(function(){
-		hostGroupEditGrid.setSelectedSingleRow(0);
-	});
-	
-	hostGroupEditGrid.reload();
-    $('#hostGroupEditModal').modal({keyboard:false,show:true});
-}
-
-function mgrGroup(){
-	alert("Mgr Group");
-}
-
 function getselectHostIds(row){
 	var hostIds = [];
 	if(row){
@@ -330,33 +279,6 @@ function getselectHostIds(row){
 	}
 	return hostIds;
 }
-
-$(document).delegate("#hostGroupEditModal  #btn_add_hosts_group","click",function(){
-	var selectedGroup = hostGroupEditGrid.getSelectedSingleRow();
-	if (selectedGroup != null) {
-		var hostIds = getselectHostIds();
-		if (hostIds.length == 0){
-			$.messager.alert("提示", "请选择要操作的主机");
-			return;
-		}
-		
-		$.messager.confirm("确认", "确定要将主机组修改为" + selectedGroup.groupName + "吗?", function() { 
-			$.ajax({
-				url: contextPath+"/rest/hosts/"，
-				type: "post",
-				contentType: "application/json",
-				data:JSON.stringify(data),
-				success: function(ret){
-					$('#hostGroupEditModal').modal("hide");
-					hostGrid.reload();
-				},
-				error: function(ret){
-					$.messager.alert("消息", "主机组修改失败");
-				}
-			});
-		});
-	}
-});
 
 $(document).delegate("#myModal  #btn_action","click",function(){
 	var opt = $("#myModal #opt").val();
@@ -531,7 +453,6 @@ function isIP(addr){
     }
     return true;
 }
-
 
 function isNumeric(str){
     if(str.length==0){

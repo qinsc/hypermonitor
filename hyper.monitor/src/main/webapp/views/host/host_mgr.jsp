@@ -89,7 +89,7 @@
 							<th width="150px">管理IP</th>
 							<th width="80px">远程控制</th>
 							<th width="120px">系统</th>
-							<th width="200px">主机组</th>
+							<th width="120px">主机组</th>
 							<th>备注</th>
 							<th width="60px">操作</th>
 						</tr>
@@ -106,15 +106,18 @@
 <%@include file="host_add.jsp"%>
 <%@include file="host_detail.jsp"%>
 <%@include file="host_group_edit.jsp"%>
+<%@include file="host_group_mgr.jsp"%>
 
 <script src="<%=contextPath%>/assets/js/dt.js"></script>
 <script src="<%=contextPath%>/views/host/js/host_mgr.js"></script>
+<script src="<%=contextPath%>/views/host/js/host_group_mgr.js"></script>
 <script type="text/javascript">
 	$(function() {
 		var contextPath = "<%=contextPath%>";
 		initHostDatatables(contextPath, "hostTable");
 		initAddHostDatatables("addHostTable");
 		initHostGroupEditDatatables();
+		initHostGroupMgrDatatables();
 	})
 </script>
 

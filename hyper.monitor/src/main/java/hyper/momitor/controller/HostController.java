@@ -4,8 +4,6 @@
 package hyper.momitor.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +35,7 @@ import hyper.momitor.util.SpringUtil;
 import hyper.momitor.vo.HostConfig;
 import hyper.momitor.vo.HostDetailInfo;
 import hyper.momitor.vo.HostInfo;
+import hyper.momitor.vo.HostsGroupInfo;
 import hyper.momitor.vo.HostsMessage;
 
 /**
@@ -315,6 +314,23 @@ public class HostController {
 			return info;
 		}
 		throw new HMException("主机信息获取失败");
+	}
+	
+	@POST
+	@Path("/group/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void editHostsGroup(HostsGroupInfo hostsGroupInfo) throws HMException {
+		if (hostsGroupInfo != null && hostsGroupInfo.getHostIds() != null) {
+			for (String hostId : hostsGroupInfo.getHostIds()) {
+				Host hst = hostService.queryOne(hostId);
+				if (hst != null) {
+					hst.setGroupId(hostsGroupInfo.getGroupId());
+					hostService.update(hst);
+				}
+			}
+		} else {
+			throw new HMException("参数有误，主组机修改失败");
+		}
 	}
 
 	/**

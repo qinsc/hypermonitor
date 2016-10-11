@@ -14,13 +14,11 @@ table.dataTable tbody tr.selected {
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="hostGroupEditModalLabel">修改主机组</h4>
+					<h4 class="modal-title" id="hostGroupEditModalLabel">修改主机所属主机组</h4>
 				</div>
 				<div class="modal-body">
-					<div>
-						<h5>请选择需要修改为的主机组</h5>
-					</div>
-					<div class="table-responsive" style="min-height: 400px;">
+					<h5>请选择要修改为的主机组</h5>
+					<div class="table-responsive" style="min-height: 400px; width: 100%;">
 						<table id="hostGroupEditTable"
 							class="table table-striped table-bordered table-hover">
 							<thead>
@@ -36,7 +34,7 @@ table.dataTable tbody tr.selected {
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" id="btn_add_hosts_group" class="btn btn-primary">修改</button>
+					<button type="button" id="btn_edit_hosts_group" class="btn btn-primary">修改</button>
 				</div>
 			</div>
 		</div>

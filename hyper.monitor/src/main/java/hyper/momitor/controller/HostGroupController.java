@@ -48,7 +48,8 @@ public class HostGroupController {
 		return hostGroupService.queryOne(hostGroupId);
 	}
 
-	@PUT
+	@POST
+	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addHostGroup(HostGroup hostGroup) throws HMException {
 		log.info("add host group: " + hostGroup);
@@ -64,6 +65,7 @@ public class HostGroupController {
 	}
 	
 	@POST
+	@Path("/update")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateHostGroup(HostGroup hostGroup) throws HMException {
 		log.info("update host group: " + hostGroup);
@@ -77,12 +79,15 @@ public class HostGroupController {
 	}
 
 	@POST
-	@Path("/{hostGroup}")
+	@Path("/delete")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void deleteHostGroup(@PathParam("hostGroupId") String hostGroupId) throws HMException {
-		log.info("delete host group: " + hostGroupId);
-		if (hostGroupId != null) {
-			hostGroupService.delete(hostGroupId);
+	public void deleteHostGroups(List<String> hostGroupIds) throws HMException {
+		log.info("delete host groups");
+		if (hostGroupIds != null) {
+			log.info("ids.size = " + hostGroupIds.size());
+			for (String hostGroupId: hostGroupIds) {
+				hostGroupService.delete(hostGroupId);
+			}
 		}
 	}
 }

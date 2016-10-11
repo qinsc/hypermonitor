@@ -209,6 +209,7 @@ var Datatable = function() {
 			_html.append(searchBox);
 			_html.append(searchImg);
 			_html.css("float", "right");
+			_html.css("margin-bottom", "6px");
 			$("label", _html).remove();
         },
         
@@ -254,7 +255,7 @@ var Datatable = function() {
             return $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
         },
         
-        setSelectedSingleRow(index) {
+        setSelectedSingleRow: function(index) {
         	var idx = 0;
             $('tbody > tr', table).each(function() {
             	if (index == idx){

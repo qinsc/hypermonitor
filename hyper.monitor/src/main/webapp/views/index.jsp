@@ -26,6 +26,11 @@
 	
 	<%@include file="common/common.jsp"%>	
 	
+	<style type="text/css">
+	.navbar-side {
+	    top: 60px;
+	}
+	</style>
 </head>
 
 <body>
